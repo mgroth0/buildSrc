@@ -88,7 +88,7 @@ val gitSubmodules
 	  .lines()
 	  .filter { it.startsWith("[") }
 	  .map { it.substringAfter("\"").substringBefore("\"") }
-	  .map { it.substringBefore("/") }
+	  .map { it.replace("/","_") }
 	  .map {
 		it to File(".gitmodules")
 			.readText().substringAfter("\"${it}\"").substringAfter("path =").substringBefore("\n").trim()
