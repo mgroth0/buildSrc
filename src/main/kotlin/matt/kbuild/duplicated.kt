@@ -12,10 +12,6 @@ import java.net.Socket
 import java.util.concurrent.Semaphore
 
 
-
-
-
-
 fun <T> T.recurse(includeSelf: Boolean = true, rchildren: (T)->Iterable<T>): Sequence<T> {
   val mychildren = rchildren(this).iterator()
   var gaveSelf = false
@@ -151,3 +147,5 @@ fun Reader.readWithTimeout(timeoutMillis: Int): String {
   }
   return r
 }
+
+enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
