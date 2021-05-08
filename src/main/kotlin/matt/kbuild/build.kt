@@ -81,12 +81,14 @@ fun withTimer(name: String, op: ()->Unit) {
 
 }
 
+
 val gitSubmodules
   get() = File(".gitmodules")
 	  .readText()
 	  .lines()
 	  .filter { it.startsWith("[") }
 	  .map { it.substringAfter("\"").substringBefore("\"") }
+	  .map { it.substringBefore("/") }
 	  .map {
 		it to File(".gitmodules")
 			.readText().substringAfter("\"${it}\"").substringAfter("path =").substringBefore("\n").trim()
