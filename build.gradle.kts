@@ -43,3 +43,4 @@ gradlePlugin {
 	implementationClass = "matt.jbuild.greeting.JGreetingPlugin"
   }
 }
+
