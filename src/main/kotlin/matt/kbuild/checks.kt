@@ -21,6 +21,14 @@ val normalSourceSets = listOf("main", "test", "commonMain", "jvmMain")
 val testSourceSets = listOf(normalSourceSets[1])
 private fun Project.validate() {
 
+  gitSubmodules
+	  .filter { it.first != "buildSrc" }
+	  .forEach {
+		ensure(":" + it.first.replace("_",":") in this.allprojects.map { it.path }) {
+		  "${it.first} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
+		}
+	  }
+
 
   allprojects {
 	it.dir.resolve("src").listFiles()?.forEach {
