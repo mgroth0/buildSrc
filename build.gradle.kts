@@ -14,6 +14,8 @@ plugins {
   val stupidKtVersion = "1.5.0"
 
   kotlin("jvm") version stupidKtVersion
+
+  `kotlin-dsl`/* version "2.1.4"*/
 }
 val ktversion = rootProject.projectDir.resolve("../libs.versions.toml").readText()
 	.lines()
@@ -29,6 +31,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${ktversion}")
   implementation("org.apache.maven:maven-artifact:3.8.1")
   implementation("org.tomlj:tomlj:1.0.0")
+  /*gradleKotlinDsl()*/
 }
 
 /*

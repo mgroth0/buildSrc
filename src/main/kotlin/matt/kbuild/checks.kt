@@ -31,7 +31,7 @@ private fun Project.validate() {
 
 
   allprojects {
-	it.dir.resolve("src").listFiles()?.forEach {
+	/*it.*/dir.resolve("src").listFiles()?.forEach {
 	  ensure(it.name in normalSourceSets || it.name == ".DS_Store") {
 		"\"${it.name}\"? No. " + (EXPLANATIONS_FOLD["noWeirdSrcSets.txt"].takeIf { it.exists() }?.readText() ?: "")
 	  }
@@ -72,7 +72,7 @@ private fun Project.validate() {
   val packs = mutableListOf<PackageInfo>()
   val ppis = mutableListOf<ProjectPackInfo>()
   allprojects {
-	val ppi = ProjectPackInfo(it)
+	val ppi = ProjectPackInfo(/*it*/this)
 	ppis.add(ppi)
   }
   ppis.forEach {
