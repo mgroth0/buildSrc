@@ -149,3 +149,5 @@ fun Reader.readWithTimeout(timeoutMillis: Int): String {
 }
 
 enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
+
+val isMac get() = "mac" in System.getProperty("os.name").toLowerCase()
