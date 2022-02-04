@@ -22,20 +22,20 @@ val testSourceSets = listOf(normalSourceSets[1])
 private fun Project.validate() {
 
   gitSubmodules
-	  .filter { it.first != "buildSrc" }
-	  .forEach {
-		ensure(":" + it.first.replace("_",":") in this.allprojects.map { it.path }) {
-		  "${it.first} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
-		}
+	.filter { it.first != "buildSrc" }
+	.forEach {
+	  ensure(":" + it.first.replace("_", ":") in this.allprojects.map { it.path }) {
+		"${it.first} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
 	  }
+	}
 
 
   allprojects {
 	/*it.*/dir.resolve("src").listFiles()?.forEach {
-	  ensure(it.name in normalSourceSets || it.name == ".DS_Store") {
-		"\"${it.name}\"? No. " + (EXPLANATIONS_FOLD["noWeirdSrcSets.txt"].takeIf { it.exists() }?.readText() ?: "")
-	  }
+	ensure(it.name in normalSourceSets || it.name == ".DS_Store") {
+	  "\"${it.name}\"? No. " + (EXPLANATIONS_FOLD["noWeirdSrcSets.txt"].takeIf { it.exists() }?.readText() ?: "")
 	}
+  }
 
 
 	this.pluginManager.findPlugin("maven-publish")?.let {
@@ -43,7 +43,7 @@ private fun Project.validate() {
 	  println("PROJ:$it")
 	  bad(
 		"\n\nNo.\n\n" + (EXPLANATIONS_FOLD["noMavenPublish.txt"].takeIf { it.exists() }?.readText()?.trimIndent()
-						 ?: "")
+		  ?: "")
 	  )
 	}
   }
@@ -203,9 +203,10 @@ private fun Project.validate() {
 		
 		good to start all packages with \"matt\". 1. organization, 2. I think I already have some reflection that depends on this 3. In the future I possibly/likely will have even more reflection depending on this""".trimIndent()
 	}
-	ensure(p1.sourceFiles.count() <= 1) {
+	if (p1.subpackages.isEmpty()) {
+	  ensure(p1.sourceFiles.count() <= 1) {
 
-	  """
+		"""
 		${p1.name} has multiple source files
 		see: ${p1.f.absolutePath}
 		
@@ -213,6 +214,61 @@ private fun Project.validate() {
 		
 	  """.trimIndent()
 
+	  }
+	  if (p1.sslpi.name != "resources") {
+		ensure(p1.sourceFiles.isNotEmpty()) {
+
+		  """
+		${p1.name} has no source files
+		see: ${p1.f.absolutePath}
+		
+ 		this is just disorganized
+		
+	  """.trimIndent()
+
+		}
+		if (p1.isMainPack) {
+		  ensure(
+			p1.sourceFiles[0].nameWithoutExtension.equals(
+			  p1.names.last() + "Main",
+			  ignoreCase = true
+			) || p1.sourceFiles[0].nameWithoutExtension.equals(p1.names.last(), ignoreCase = true)
+		  ) /*being a bit lazy. non-executable modules like libraries should NOT have "Main" in any src names. Used an or statement here as a shortcut bc I don't have time to check if the current module is a library now. I'm not sure if I've set this up yet*/{
+
+			"""
+		${p1.name}'s source file is not the same (+Main since main package) (even ignoring case) as the package name
+		see: ${p1.f.absolutePath}
+		
+ 		this is just disorganized, by my standards, since I'm going for no more than 1 src file per package
+		
+	  """.trimIndent()
+		  }
+		} else {
+		  ensure(p1.sourceFiles[0].nameWithoutExtension.equals(p1.names.last(), ignoreCase = true)) {
+
+			"""
+		${p1.name}'s source file is not the same (even ignoring case) as the package name
+		see: ${p1.f.absolutePath}
+		
+ 		this is just disorganized, by my standards, since I'm going for no more than 1 src file per package
+		
+	  """.trimIndent()
+
+		  }
+		}
+	  }
+	} else {
+	  /*  ensure(p1.sourceFiles.isEmpty()) {
+
+		  """
+		  ${p1.name} has both subpackages and a source file
+		  see: ${p1.f.absolutePath}
+
+		   this is disorganized?
+
+		""".trimIndent()
+
+		}*/
 	}
 	packs.forEach { p2 ->
 	  if (p1.hasSourceFiles && p2.hasSourceFiles && p1 != p2) {
@@ -252,8 +308,8 @@ class ProjectPackInfo(val project: Project) {
   val src = dir["src"]
   val srcExists = src.exists()
   val srcSets = src.listFiles()
-	  ?.filter { it.name != ".DS_Store" }
-	  ?.map { SourceSetPackInfo(it, this) }
+	?.filter { it.name != ".DS_Store" }
+	?.map { SourceSetPackInfo(it, this) }
   val langs = srcSets?.flatMap { it.langFolds }?.apply {
 	val lfolds = map { it.name }.toSet()
 	if (false) {
@@ -270,8 +326,17 @@ class ProjectPackInfo(val project: Project) {
   var mname: String? = null
 }
 
+/*example SourceSetPackInfo: /Users/matt/Desktop/registered/todo/flow/kjs/src/main*/
 class SourceSetPackInfo(val srcSet: FixedFile, val ppi: ProjectPackInfo) {
+  companion object {
+	var firstMade = false
+  }
+
   init {
+	if (!firstMade) {
+	  println("example SourceSetPackInfo: ${srcSet.absolutePath}")
+	  firstMade = true
+	}
 	require(srcSet.isDirectory) {
 	  "$srcSet should be a dir"
 	}
@@ -296,13 +361,22 @@ class SourceSetPackInfo(val srcSet: FixedFile, val ppi: ProjectPackInfo) {
 }
 
 
+/*example SourceSetLanguagePackInfo: /Users/matt/Desktop/registered/todo/flow/kjs/src/main/kotlin*/
 class SourceSetLanguagePackInfo(val f: FixedFile, val sspi: SourceSetPackInfo) {
   val packages: List<PackageInfo>
-  val name = f.name
+  val name = (f.name)
+
   val ppi = sspi.ppi
 
-  init {
+  companion object {
+	var firstMade = false
+  }
 
+  init {
+	if (!firstMade) {
+	  println("example SourceSetLanguagePackInfo: ${f.absolutePath}")
+	  firstMade = true
+	}
 	val packs = mutableListOf<PackageInfo>()
 	f.recurse(
 	  includeSelf = false
@@ -324,6 +398,58 @@ class PackageInfo(val f: FixedFile, val sslpi: SourceSetLanguagePackInfo) {
   val name = f.absolutePath.replace(sslpi.f.absolutePath, "").replace("/", ".").removePrefix(".").removeSuffix(".")
   val names = name.split(".")
   val isTest = sspi.isTest
+  val isMainPack = name.equals(
+	"matt.${
+	  f.absolutePath.substringAfter(
+		sslpi.f
+		/*sslpi.sspi.ppi.project.rootProject.projectDir*/
+
+		  /*.resolve("KJ")
+		  .resolve(sslpi.sspi.ppi.project.name)*/
+		  /*.resolve("src")
+		  .resolve("main")
+		  .resolve(sslpi.name)*/
+		  .resolve("matt") /*redundant*/
+		  .absolutePath
+ 
+	  )
+		.trimStart('/')
+		.trimEnd('/')
+		.replace("/", ".")
+	}", ignoreCase = true
+  )/*.apply {
+	println("isMainPack for ${this@PackageInfo.name}=${this}")
+	println("\t${f.absolutePath} substring after...")
+	println(
+	  sslpi.sspi.ppi.project.rootProject.projectDir
+		.resolve("KJ")
+		.resolve(sslpi.sspi.ppi.project.name)
+		.resolve("src")
+		.resolve("main")
+		.resolve(sslpi.name)
+		.resolve("matt") *//*redundant*//*
+		.absolutePath
+	)
+	println(
+	  "\texpected ${
+		"matt.${
+		  f.absolutePath.substringAfter(
+			sslpi.sspi.ppi.project.rootProject.projectDir
+			  .resolve("KJ")
+			  .resolve(sslpi.sspi.ppi.project.name)
+			  .resolve("src")
+			  .resolve("main")
+			  .resolve(sslpi.name)
+			  .resolve("matt") *//*redundant*//*
+			  .absolutePath
+		  )
+			.trimStart('/')
+			.trimEnd('/')
+			.replace("/", ".")
+		}"
+	  }"
+	)
+  }*/
 
   /*redundant*/
   val subpackages = f.listFiles()!!.filter { it.isDirectory }.map {

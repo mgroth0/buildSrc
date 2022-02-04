@@ -145,9 +145,11 @@ fun Reader.readWithTimeout(timeoutMillis: Int): String {
 
 enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
 
-val isMac get() = "mac" in System.getProperty("os.name").toLowerCase()
-val isNewMac
-    get() = isMac && run {
+val isMac by lazy { "mac" in System.getProperty("os.name").toLowerCase() }
+
+val isNewMac by lazy {
+    isMac && run {
         val proc = ProcessBuilder("uname", "-m").start()
-        BufferedReader(InputStreamReader(proc.inputStream)).readText()
+        BufferedReader(InputStreamReader(proc.inputStream)).readText().trim()
     } == "arm64"
+}
