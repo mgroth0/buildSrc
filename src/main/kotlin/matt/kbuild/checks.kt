@@ -240,7 +240,9 @@ private fun Project.validate() {
 		see: ${p1.f.absolutePath}
 		
  		this is just disorganized, by my standards, since I'm going for no more than 1 src file per package
-		
+	
+		p1.sourceFiles[0].nameWithoutExtension=${p1.sourceFiles[0].nameWithoutExtension}
+		p1.names.last()=${p1.names.last()} 
 	  """.trimIndent()
 		  }
 		} else {
