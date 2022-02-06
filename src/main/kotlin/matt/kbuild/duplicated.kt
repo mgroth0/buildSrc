@@ -158,11 +158,13 @@ fun shell(vararg args: String, debug: Boolean = false): String {
   }
   val proc = ProcessBuilder(*args).start()
   proc.waitFor()
-  val r = BufferedReader(InputStreamReader(proc.inputStream)).readText()
+  val output = BufferedReader(InputStreamReader(proc.inputStream)).readText()
+  val errorOutput = BufferedReader(InputStreamReader(proc.errorStream)).readText()
   if (debug) {
-	println("output: ${r}")
+	println("output: ${output}")
+	println("errorOutput: ${errorOutput}")
   }
-  return r
+  return output
 }
 
 val isNewMac by lazy {
