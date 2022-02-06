@@ -154,9 +154,10 @@ val isMac by lazy { "mac" in System.getProperty("os.name").toLowerCase() }
 
 fun shell(vararg args: String, debug: Boolean = false): String {
   if (debug) {
-	println("running command: ${args}")
+	println("running command: ${args.joinToString(" ")}")
   }
   val proc = ProcessBuilder(*args).start()
+  proc.waitFor()
   val r = BufferedReader(InputStreamReader(proc.inputStream)).readText()
   if (debug) {
 	println("output: ${r}")
