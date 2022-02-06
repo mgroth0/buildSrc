@@ -23,6 +23,7 @@ private fun Project.validate() {
 
   gitSubmodules
 	.filter { it.first != "buildSrc" }
+	.filter { it.first != "RootFiles" }
 	.forEach {
 	  ensure(":" + it.first.replace("_", ":") in this.allprojects.map { it.path }) {
 		"${it.first} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
