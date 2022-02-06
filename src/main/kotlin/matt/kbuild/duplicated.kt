@@ -152,9 +152,16 @@ enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
 
 val isMac by lazy { "mac" in System.getProperty("os.name").toLowerCase() }
 
-fun shell(vararg args: String): String {
+fun shell(vararg args: String, debug: Boolean = false): String {
+  if (debug) {
+	println("running command: ${args}")
+  }
   val proc = ProcessBuilder(*args).start()
-  return BufferedReader(InputStreamReader(proc.inputStream)).readText()
+  val r = BufferedReader(InputStreamReader(proc.inputStream)).readText()
+  if (debug) {
+	println("output: ${r}")
+  }
+  return r
 }
 
 val isNewMac by lazy {
