@@ -150,6 +150,20 @@ fun Reader.readWithTimeout(timeoutMillis: Int): String {
 
 enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
 
+enum class Machine {
+	OLD_MAC,
+	NEW_MAC,
+	WINDOWS
+}
+
+val thisMachine by lazy {
+	if (isMac) {
+		if (isNewMac) Machine.NEW_MAC else Machine.OLD_MAC
+	} else Machine.WINDOWS
+	// TODO: CHECK LINUX
+
+}
+
 val isMac by lazy { "mac" in System.getProperty("os.name").toLowerCase() }
 
 fun shell(vararg args: String, debug: Boolean = false, workingDir: File? = null): String {
