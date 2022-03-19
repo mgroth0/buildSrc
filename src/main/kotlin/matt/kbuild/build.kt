@@ -27,7 +27,7 @@ fun Project.kotlinCompile(
 I also do this in buildSrc/build.gradle.kts
 without calling this. It can't be helped easily.*/
 fun tomlVersion(name: String) =
-	Toml.parse(USER_DIR.resolve("libs.versions.toml").toPath()).getTable("versions")!!.getString(name)!!
+	Toml.parse(USER_DIR.resolve("RootFiles").resolve("libs.versions.toml").toPath()).getTable("versions")!!.getString(name)!!
 
 
 val Project.autoReflectionsJar: String

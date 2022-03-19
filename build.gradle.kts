@@ -17,7 +17,7 @@ plugins {
 
   `kotlin-dsl`/* version "2.1.4"*/
 }
-val ktversion = rootProject.projectDir.resolve("../libs.versions.toml").readText()
+val ktversion = rootProject.projectDir.resolve("..").resolve("RootFiles").resolve("libs.versions.toml").readText()
 	.lines()
 	.first { it.contains("kotlin") }
 	.substringAfter("\"")
