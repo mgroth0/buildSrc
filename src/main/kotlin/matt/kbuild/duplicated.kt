@@ -166,6 +166,9 @@ val thisMachine by lazy {
 
 val isMac by lazy { "mac" in System.getProperty("os.name").toLowerCase() }
 
+
+val desktopFile by lazy {File(System.getProperty("user.home")).resolve("Desktop")}
+
 fun shell(vararg args: String, debug: Boolean = false, workingDir: File? = null): String {
   if (debug) {
 	println("running command: ${args.joinToString(" ")}")
