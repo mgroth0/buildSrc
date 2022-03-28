@@ -169,6 +169,36 @@ val isMac by lazy { "mac" in System.getProperty("os.name").toLowerCase() }
 
 val desktopFile by lazy {File(System.getProperty("user.home")).resolve("Desktop")}
 
+
+fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
+  val mainClassName = subproject.capitalize().plus("Main")
+  val mainKt = "$mainClassName.Kt"
+  desktopFile.resolve("$subproject.au3").writeText(
+	"""
+      #cs ----------------------------------------------------------------------------
+
+       AutoIt Version: 3.3.16.0
+       Author:         myName
+
+       Script Function:
+      	Template AutoIt script.
+
+      #ce ----------------------------------------------------------------------------
+
+      ; Script Start - Add your code below here
+
+      ${"$"}program="C:\Users\mgrot\AppData\Local\JetBrains\Toolbox\apps\IDEA-U\ch-0\213.6777.52\bin\idea64.exe"
+	  ${"$"}file="${subprojectDir.resolve("src").resolve("main").resolve("kotlin").resolve("matt").resolve(superproject).resolve(subproject).resolve(mainKt).absolutePath}"
+      ; Run(@ComSpec & "/c start " & ${"$"}program & " " & ${"$"}file)
+      Run(${"$"}program & " " & ${"$"}file)
+      ; Opt("WinTitleMatchMode", 2) ; 2 = Match any substring in the title
+      ; WinActivate("$mainClassName")
+      Sleep(500)
+      WinActivate("MyDesktop – $mainKt [MyDesktop.KJ.${superproject}.${subproject}.main]")
+    """.trimIndent()
+  )
+}
+
 fun shell(vararg args: String, debug: Boolean = false, workingDir: File? = null): String {
   if (debug) {
 	println("running command: ${args.joinToString(" ")}")
