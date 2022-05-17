@@ -11,7 +11,7 @@ plugins {
   println(File("../libs.versions.toml").canonicalPath)
 
   /*yes, this is stupidly required because user.dir here is .gradle/daemon or something and plugin block dsl and super weird and restricted. look it up if you don't beleive me.*/
-  val stupidKtVersion = "1.6.10"
+  val stupidKtVersion = "1.6.21"
 
   kotlin("jvm") version stupidKtVersion
 
