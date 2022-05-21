@@ -391,7 +391,7 @@ class SourceSetLanguagePackInfo(val f: FixedFile, val sspi: SourceSetPackInfo) {
             firstMade = true
         }
         val packs = mutableListOf<PackageInfo>()
-        f.recurse(
+        f.recarse(
             includeSelf = false
         ) {
             it.listFiles()?.map { it }?.toList() ?: listOf()
