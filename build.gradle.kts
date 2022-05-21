@@ -32,6 +32,7 @@ dependencies {
   implementation("org.apache.maven:maven-artifact:3.8.1")
   implementation("org.tomlj:tomlj:1.0.0")
   /*gradleKotlinDsl()*/
+  implementation(project("kbuild"))
 }
 
 /*
