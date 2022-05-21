@@ -1,0 +1,3 @@
+[submodule "kbuild"]
+	path = kbuild
+	url = https://github.com/mgroth0/kbuild
