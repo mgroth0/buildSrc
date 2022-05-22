@@ -5,16 +5,18 @@ so buildscripts dont need to use import statements????
 see https://github.com/gradle/gradle/issues/7557
 */
 
+import matt.kbuild.FLOW_FOLDER
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.tasks.Exec
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.tomlj.Toml
 import java.io.File
 
-
-val USER_DIR = File(System.getProperty("user.dir"))
+/*SHOULD NEVER USE THIS. DOESNT WORK WITH TOOLING API*/
+/*val USER_DIR = File(System.getProperty("user.dir"))*/
 
 fun Project.kotlinCompile(
   cfg: Action<KotlinCompile>
@@ -27,7 +29,8 @@ fun Project.kotlinCompile(
 I also do this in buildSrc/build.gradle.kts
 without calling this. It can't be helped easily.*/
 fun tomlVersion(name: String) =
-	Toml.parse(USER_DIR.resolve("RootFiles").resolve("libs.versions.toml").toPath()).getTable("versions")!!.getString(name)!!
+  Toml.parse(FLOW_FOLDER.resolve("RootFiles").resolve("libs.versions.toml").toPath()).getTable("versions")!!
+	.getString(name)!!
 
 
 val Project.autoReflectionsJar: String
@@ -84,12 +87,160 @@ fun withTimer(name: String, op: ()->Unit) {
 
 val gitSubmodules
   get() = File(".gitmodules")
-	  .readText()
-	  .lines()
-	  .filter { it.startsWith("[") }
-	  .map { it.substringAfter("\"").substringBefore("\"") }
-	  .map { it.replace("/","_") }
-	  .map {
-		it to File(".gitmodules")
-			.readText().substringAfter("\"${it}\"").substringAfter("path =").substringBefore("\n").trim()
-	  }
+	.readText()
+	.lines()
+	.filter { it.startsWith("[") }
+	.map { it.substringAfter("\"").substringBefore("\"") }
+	.map { it.replace("/", "_") }
+	.map {
+	  it to File(".gitmodules")
+		.readText().substringAfter("\"${it}\"").substringAfter("path =").substringBefore("\n").trim()
+	}
+
+
+val Project.gitFolder get() = projectDir.listFiles()!!.first { it.name == ".git" }
+val Project.isGitProject get() = ".git" in projectDir.list()!!
+
+fun Project.execGitFor(task: Exec) = ExecGit(task = task, dir = this.gitFolder.absolutePath)
+fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.list()!! }!!.let { f ->
+  ExecGit(
+	task = task, dir = f.resolve(".git").absolutePath
+  )
+}
+
+private val simpleGits = mutableMapOf<Project, SimpleGit>()
+val Project.simpleGit: SimpleGit
+  get() {
+	return simpleGits[this] ?: SimpleGit(gitDir = this.gitFolder.absolutePath).also { simpleGits[this] = it }
+  }
+
+fun Exec.gitCommandLine(vararg c: String) {
+  if (thisMachine == WINDOWS) {
+	commandLine(
+	  "C:\\Program Files\\Git\\bin\\sh.exe",
+	  "-c",
+	  c.joinToString(" ").replace("\\", "/")
+	)
+  } else {
+	commandLine(*c)
+  }
+}
+
+
+fun gitShell(vararg c: String, debug: Boolean = false, workingDir: File? = null): String {
+  return if (thisMachine == WINDOWS) {
+	shell(
+	  "C:\\Program Files\\Git\\bin\\sh.exe",
+	  "-c",
+	  c.joinToString(" ").replace("\\", "/"),
+	  workingDir = workingDir,
+	  debug = debug
+	)
+  } else {
+	shell(*c, workingDir = workingDir, debug = debug)
+  }
+}
+
+
+abstract class Git<R>(val dir: String) {
+
+  val gitProjectDir = File(dir).parentFile
+
+  val gitProjectName by lazy { gitProjectDir.name }
+
+  fun branchCommands() = wrapGitCommand(
+	"branch",
+  )
+
+  fun branch() = op(branchCommands())
+
+  fun addCommitCommand() = wrapGitCommand(
+	"add-commit",
+	"-m",
+	"autocommit",
+  )
+  fun addCommit() = op(addCommitCommand())
+
+  val commandStart = arrayOf("git", "--git-dir=${dir}")
+
+  private fun wrapGitCommand(vararg command: String): Array<String> {
+	return if (thisMachine == WINDOWS) {
+	  arrayOf(
+		"C:\\Program Files\\Git\\bin\\sh.exe",
+		"-c",
+		*commandStart,
+		command.joinToString(" ").replace("\\", "/")
+	  )
+	} else arrayOf(*commandStart, *command)
+  }
+
+  abstract fun op(command: Array<String>): R
+
+  fun branchDeleteCommand(branchName: String) =
+	arrayOf("branch", "-d", branchName)
+
+
+  fun branchDelete(branchName: String) = op(branchDeleteCommand(branchName))
+
+  fun branchCreateCommand(branchName: String) =
+	wrapGitCommand("branch", branchName)
+
+  fun branchCreate(branchName: String) = op(branchCreateCommand(branchName))
+
+  private fun checkoutCommand(branchName: String) =
+	wrapGitCommand("checkout", branchName)
+
+
+  fun checkoutMaster() = op(checkoutCommand("master"))
+
+  fun mergeCommand(branchName: String) =
+	wrapGitCommand("merge", branchName)
+
+  fun merge(branchName: String) = op(mergeCommand(branchName))
+
+  fun pushCommand() =
+	wrapGitCommand("push", "origin", "master")
+
+  fun push() = op(pushCommand())
+
+  fun pullCommand() =
+	wrapGitCommand("pull", "origin", "master")
+
+  fun pull() = op(pullCommand())
+}
+
+class SimpleGit(gitDir: String, val debug: Boolean = false): Git<String>(gitDir) {
+  constructor(projectDir: File, debug: Boolean = false): this(
+	projectDir.resolve(".git").absolutePath,
+	debug
+  )
+  override fun op(command: Array<String>): String {
+	return shell(*command, debug = debug, workingDir = gitProjectDir)
+  }
+
+  private fun isDetatched() = "detatched" in branch()
+
+  private fun reattatch() {
+	println("${gitProjectName} is detached! dealing")
+	addCommit()
+	branchDelete("tmp")
+	branchCreate("tmp")
+	checkoutMaster()
+	merge("tmp")
+	println("dealt with it")
+  }
+
+  fun reattatchIfNeeded() {
+	if (isDetatched()) reattatch()
+  }
+}
+
+class ExecGit(val task: Exec, dir: String): Git<Unit>(dir) {
+  override fun op(command: Array<String>): Unit {
+	task.workingDir(gitProjectDir)
+	task.commandLine(*command)
+  }
+}
+
+fun File.hasParentWithNameStartingWith(s: String): Boolean =
+  nameWithoutExtension.startsWith(s) || parentFile?.hasParentWithNameStartingWith(s) ?: false
