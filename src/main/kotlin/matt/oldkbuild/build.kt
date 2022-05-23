@@ -154,12 +154,10 @@ abstract class GitProject<R>(val dir: String) {
 
   fun branch() = op(branchCommands())
 
-  fun addCommitCommand() = wrapGitCommand(
-	"add-commit",
-	"-m",
-	"autocommit",
-  )
-  fun addCommit() = op(addCommitCommand())
+  fun addAllCommand() = wrapGitCommand("add","-A")
+  fun commitCommand() = wrapGitCommand("commit","-m","autocommit")
+  fun addAll() = op(addAllCommand())
+  fun commit() = op(commitCommand())
 
   val commandStart = arrayOf("git", "--git-dir=${dir}")
 
@@ -222,7 +220,8 @@ class SimpleGit(gitDir: String, val debug: Boolean = false): GitProject<String>(
 
   private fun reattatch() {
 	println("${gitProjectName} is detached! dealing")
-	addCommit()
+	addAll()
+	commit()
 	branchDelete("tmp")
 	branchCreate("tmp")
 	checkoutMaster()
@@ -244,3 +243,27 @@ class ExecGit(val task: Exec, dir: String): GitProject<Unit>(dir) {
 
 fun File.hasParentWithNameStartingWith(s: String): Boolean =
   nameWithoutExtension.startsWith(s) || parentFile?.hasParentWithNameStartingWith(s) ?: false
+
+
+fun Exec.setExitHandler(op: (Int, String) -> Unit) {
+  isIgnoreExitValue = true
+  val out = java.io.ByteArrayOutputStream()
+  val err = java.io.ByteArrayOutputStream()
+  this.standardOutput = out
+  this.errorOutput = err
+
+  doLast {
+	val result = executionResult.get()
+	op(result.exitValue,standardOutput.toString() + errorOutput.toString())
+  }
+
+  doLast {
+	val stdout = standardOutput.toString()
+
+	if (executionResult.get().exitValue == 0) {
+	  //do nothing
+	} else if ("nothing to commit" !in stdout) {
+	  throw RuntimeException(stdout)
+	}
+  }
+}
