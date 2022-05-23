@@ -201,8 +201,21 @@ abstract class GitProject<R>(val dir: String) {
 
   fun push() = op(pushCommand())
 
+
+  /*using --quiet here, which prevents progress from being reported to stdErr, which was showing up in gradle like:
+  *
+  *
+  *
+  *
+  From https://github.com/mgroth0/play
+ branch            master     -> FETCH_HEAD
+  *
+  *
+  * (so ugly)
+  *
+  * */
   fun pullCommand() =
-	wrapGitCommand("pull", "origin", "master")
+	wrapGitCommand("pull", "origin", "master", "--quiet")
 
   fun pull() = op(pullCommand())
 }

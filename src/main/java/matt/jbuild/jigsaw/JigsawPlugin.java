@@ -30,7 +30,8 @@ public class JigsawPlugin implements Plugin<Project> {
                 ktSrc = ktSrc;
 
                 File d = ((KotlinCompile) ktSrc).getDestinationDirectory().get().getAsFile();
-                ((JavaCompile) jc).setDestinationDir(d);
+                ((KotlinCompile) ktSrc).getDestinationDirectory().set(d);
+//                ((JavaCompile) jc).setDestinationDir(d);
                 /*apparently this duplicates something
                 https://stackoverflow.com/questions/47657755/building-a-kotlin-java-9-project-with-gradle*/
 
