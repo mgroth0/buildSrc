@@ -8,9 +8,9 @@ rootProject.name = "buildSrc" /*necessary to avoid some warning*/
  */
 fun Settings.enableFeaturePreviewQuietly(name: String, summary: String) {
 
-  if (name != "VERSION_CATALOGS") {
+//  if (name != "VERSION_CATALOGS") {
 	enableFeaturePreview(name)
-  }
+//  }
 
 
   val logger: Any = org.gradle.util.internal.IncubationLogger::class.java

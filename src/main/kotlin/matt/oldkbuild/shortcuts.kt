@@ -7,7 +7,7 @@ import matt.kbuild.port
 import matt.kbuild.Sender
 import matt.kbuild.proc
 import matt.kbuild.allStdOutAndStdErr
-import org.gradle.configurationcache.extensions.capitalized
+import matt.kbuild.cap
 
 //import matt.kbuild.isMac
 //import matt.kbuild.isNewMac
@@ -51,8 +51,10 @@ enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
 val desktopFile by lazy { File(System.getProperty("user.home")).resolve("Desktop") }
 
 
+
+
 fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
-  val mainClassName = subproject.capitalized().plus("Main")
+  val mainClassName = subproject.cap().plus("Main")
   val mainKt = "$mainClassName.Kt"
   desktopFile.resolve("$subproject.au3").writeText(
 	"""
