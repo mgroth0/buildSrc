@@ -154,23 +154,23 @@ abstract class GitProject<R>(val dir: String, val debug: Boolean) {
 
   fun branch() = op(branchCommands())
 
-  fun addAllCommand() = wrapGitCommand("add", "-A")
+  fun addAllCommand() = wrapGitCommand("add", "-A", quietApplicable = false)
   fun commitCommand() = wrapGitCommand("commit", "-m", "autocommit")
   fun addAll() = op(addAllCommand())
   fun commit() = op(commitCommand())
 
   val commandStart = arrayOf("git", "--git-dir=${dir}")
 
-  private fun wrapGitCommand(vararg command: String): Array<String> {
+  private fun wrapGitCommand(vararg command: String, quietApplicable: Boolean = true): Array<String> {
 	return if (thisMachine == WINDOWS) {
 	  arrayOf(
 		"C:\\Program Files\\Git\\bin\\sh.exe",
 		"-c",
 		*commandStart,
 		command.joinToString(" ").replace("\\", "/"),
-		*(if (!debug) arrayOf("--quiet") else arrayOf())
+		*(if (quietApplicable && !debug) arrayOf("--quiet") else arrayOf())
 	  )
-	} else arrayOf(*commandStart, *command)
+	} else arrayOf(*commandStart, *command, *(if (quietApplicable && !debug) arrayOf("--quiet") else arrayOf()))
   }
 
   abstract fun op(command: Array<String>): R
@@ -249,7 +249,7 @@ class SimpleGit(gitDir: String, debug: Boolean = false): GitProject<String>(gitD
   }
 }
 
-class ExecGit(val task: Exec, dir: String, debug: Boolean = false): GitProject<Unit>(dir,debug) {
+class ExecGit(val task: Exec, dir: String, debug: Boolean = false): GitProject<Unit>(dir, debug) {
   override fun op(command: Array<String>): Unit {
 	task.workingDir(gitProjectDir)
 	task.commandLine(*command)
