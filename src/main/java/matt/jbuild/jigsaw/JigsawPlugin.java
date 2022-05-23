@@ -4,9 +4,12 @@ package matt.jbuild.jigsaw;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.file.Directory;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.internal.impldep.org.intellij.lang.annotations.Language;
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile;
+
+import java.io.File;
 
 public class JigsawPlugin implements Plugin<Project> {
 
@@ -26,7 +29,8 @@ public class JigsawPlugin implements Plugin<Project> {
                 }
                 ktSrc = ktSrc;
 
-                ((JavaCompile) jc).setDestinationDir(((KotlinCompile) ktSrc).getDestinationDir());
+                File d = ((KotlinCompile) ktSrc).getDestinationDirectory().get().getAsFile();
+                ((JavaCompile) jc).setDestinationDir(d);
                 /*apparently this duplicates something
                 https://stackoverflow.com/questions/47657755/building-a-kotlin-java-9-project-with-gradle*/
 
