@@ -21,14 +21,14 @@ val EXPLANATIONS_FOLD = FixedFile(FLOW_FOLDER.resolve("explanations"))
 val normalLanguages = listOf("kotlin", "java", "resources")
 val normalSourceSets = listOf("main", "test", "commonMain", "jvmMain")
 val testSourceSets = listOf(normalSourceSets[1])
-@OptIn(ExperimentalStdlibApi::class)
+//@OptIn(ExperimentalStdlibApi::class)
 private fun Project.validate() {
 
     gitSubmodules
         .filter { it.first != "buildSrc" }
         .filter { it.first != "RootFiles" }
         .forEach {
-            ensure(":" + it.first.replace("_", ":").uppercase() in this.allprojects.map { it.path.uppercase() }) {
+            ensure(":" + it.first.replace("_", ":").toUpperCase() in this.allprojects.map { it.path.toUpperCase() }) {
                 allprojects.forEach {
                     println("\t${it.path}")
                 }
