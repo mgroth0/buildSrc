@@ -7,6 +7,7 @@ import matt.kbuild.port
 import matt.kbuild.Sender
 import matt.kbuild.proc
 import matt.kbuild.allStdOutAndStdErr
+
 //import matt.kbuild.isMac
 //import matt.kbuild.isNewMac
 
@@ -18,7 +19,9 @@ val thisMachine: matt.kbuild.Machine get() = matt.kbuild.thisMachine
 val ismac get() = matt.kbuild.ismac
 val isNewMac get() = matt.kbuild.isNewMac
 
-fun <T> T.recarse(includeSelf: Boolean = true, rchildren: (T)->Iterable<T>): Sequence<T> = recurse(includeSelf, rchildren)
+fun <T> T.recarse(includeSelf: Boolean = true, rchildren: (T)->Iterable<T>): Sequence<T> =
+  recurse(includeSelf, rchildren)
+
 fun part(name: String) = port(name)
 
 
@@ -80,30 +83,20 @@ fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
 }
 
 
-
 fun shell(vararg args: String, debug: Boolean = false, workingDir: File? = null): String {
-
-  return proc(
+  if (debug) {
+	println("running command: ${args.joinToString(" ")}")
+  }
+  val p = proc(
 	wd = workingDir,
 	args = args
-  ).allStdOutAndStdErr()
+  )
+  val output = p.allStdOutAndStdErr()
+  if (debug) {
+	println("output: ${output}")
+  }
+  return output
 }
-//
-//  if (debug) {
-//	println("running command: ${args.joinToString(" ")}")
-//  }
-//  val proc = ProcessBuilder(*args).apply {
-//	if (workingDir != null) this.directory(workingDir)
-//  }.start()
-//  proc.waitFor()
-//  val output = BufferedReader(InputStreamReader(proc.inputStream)).readText()
-//  val errorOutput = BufferedReader(InputStreamReader(proc.errorStream)).readText()
-//  if (debug) {
-//	println("output: ${output}")
-//	println("errorOutput: ${errorOutput}")
-//  }
-//  return output
-//}
 
 //val isNewMac by lazy {
 //  isMac && shell("uname", "-m").trim() == "arm64"
