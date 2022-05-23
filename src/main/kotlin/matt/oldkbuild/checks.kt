@@ -10,7 +10,7 @@ import java.io.File
 open class MValidations: DefaultTask() {
   @TaskAction
   fun validate() {
-	withTimer("validate") {
+	withTimer("validate",quiet=true) {
 	  this.project.validate()
 	}
   }
@@ -351,7 +351,7 @@ class SourceSetPackInfo(val srcSet: FixedFile, val ppi: ProjectPackInfo) {
 
   init {
 	if (!firstMade) {
-	  println("example SourceSetPackInfo: ${srcSet.absolutePath}")
+//	  println("example SourceSetPackInfo: ${srcSet.absolutePath}")
 	  firstMade = true
 	}
 	require(srcSet.isDirectory) {
@@ -391,7 +391,7 @@ class SourceSetLanguagePackInfo(val f: FixedFile, val sspi: SourceSetPackInfo) {
 
   init {
 	if (!firstMade) {
-	  println("example SourceSetLanguagePackInfo: ${f.absolutePath}")
+//	  println("example SourceSetLanguagePackInfo: ${f.absolutePath}")
 	  firstMade = true
 	}
 	val packs = mutableListOf<PackageInfo>()

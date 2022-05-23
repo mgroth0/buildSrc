@@ -67,7 +67,7 @@ fun KotlinJvmOptions.mventionKotlinJvmOptions() {
   } else listOf())
 }
 
-fun withTimer(name: String, op: ()->Unit) {
+fun withTimer(name: String, quiet: Boolean = false, op: ()->Unit) {
   var failed = false
   val start = System.currentTimeMillis()
   try {
@@ -78,7 +78,7 @@ fun withTimer(name: String, op: ()->Unit) {
   } finally {
 	val stop = System.currentTimeMillis()
 	val diff = stop - start
-	println("$name took ${diff/1000.0} seconds success=${!failed}")
+	if (!quiet) println("$name took ${diff/1000.0} seconds success=${!failed}")
   }
 
 
@@ -142,7 +142,7 @@ fun gitShell(vararg c: String, debug: Boolean = false, workingDir: File? = null)
 }
 
 
-abstract class GitProject<R>(val dir: String) {
+abstract class GitProject<R>(val dir: String, val debug: Boolean) {
 
   val gitProjectDir = File(dir).parentFile
 
@@ -167,7 +167,8 @@ abstract class GitProject<R>(val dir: String) {
 		"C:\\Program Files\\Git\\bin\\sh.exe",
 		"-c",
 		*commandStart,
-		command.joinToString(" ").replace("\\", "/")
+		command.joinToString(" ").replace("\\", "/"),
+		*(if (!debug) arrayOf("--quiet") else arrayOf())
 	  )
 	} else arrayOf(*commandStart, *command)
   }
@@ -215,12 +216,12 @@ abstract class GitProject<R>(val dir: String) {
   *
   * */
   fun pullCommand() =
-	wrapGitCommand("pull", "origin", "master", "--quiet")
+	wrapGitCommand("pull", "origin", "master")
 
   fun pull() = op(pullCommand())
 }
 
-class SimpleGit(gitDir: String, val debug: Boolean = false): GitProject<String>(gitDir) {
+class SimpleGit(gitDir: String, debug: Boolean = false): GitProject<String>(gitDir, debug) {
   constructor(projectDir: File, debug: Boolean = false): this(
 	projectDir.resolve(".git").absolutePath,
 	debug
@@ -248,7 +249,7 @@ class SimpleGit(gitDir: String, val debug: Boolean = false): GitProject<String>(
   }
 }
 
-class ExecGit(val task: Exec, dir: String): GitProject<Unit>(dir) {
+class ExecGit(val task: Exec, dir: String, debug: Boolean = false): GitProject<Unit>(dir,debug) {
   override fun op(command: Array<String>): Unit {
 	task.workingDir(gitProjectDir)
 	task.commandLine(*command)
