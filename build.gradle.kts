@@ -5,6 +5,8 @@ repositories {
   mavenCentral()
 }
 
+
+
 val rootProj = rootProject
 //rootProj.acc
 plugins {
@@ -31,6 +33,11 @@ fun stupidTomlVersion(name: String) =
 	.substringAfter("\"")
 	.substringBefore("\"")
 	.trim()
+
+tasks.wrapper {
+  distributionType = Wrapper.DistributionType.ALL
+  gradleVersion = stupidTomlVersion("gradle")
+}
 
 val ktversion = stupidTomlVersion("kotlin")
 
