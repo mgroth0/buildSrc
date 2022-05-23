@@ -34,9 +34,17 @@ fun stupidTomlVersion(name: String) =
 	.substringBefore("\"")
 	.trim()
 
-tasks.wrapper {
-  distributionType = Wrapper.DistributionType.ALL
-  gradleVersion = stupidTomlVersion("gradle")
+//tasks.wrapper {
+//  distributionType = Wrapper.DistributionType.ALL
+//  val tomlGradleVersion = stupidTomlVersion("gradle")
+//  println("buildSrc wrapper gradle version set to $tomlGradleVersion")
+//  gradleVersion = tomlGradleVersion
+//}
+
+val verbose = false
+if (verbose) {
+  println("buildSrc Gradle Version: ${GradleVersion.current()}")
+  println("buildSrc JDK Version: ${JavaVersion.current()}")
 }
 
 val ktversion = stupidTomlVersion("kotlin")
