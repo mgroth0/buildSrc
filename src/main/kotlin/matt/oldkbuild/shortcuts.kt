@@ -7,6 +7,7 @@ import matt.kbuild.port
 import matt.kbuild.Sender
 import matt.kbuild.proc
 import matt.kbuild.allStdOutAndStdErr
+import org.gradle.configurationcache.extensions.capitalized
 
 //import matt.kbuild.isMac
 //import matt.kbuild.isNewMac
@@ -51,7 +52,7 @@ val desktopFile by lazy { File(System.getProperty("user.home")).resolve("Desktop
 
 
 fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
-  val mainClassName = subproject.capitalize().plus("Main")
+  val mainClassName = subproject.capitalized().plus("Main")
   val mainKt = "$mainClassName.Kt"
   desktopFile.resolve("$subproject.au3").writeText(
 	"""
@@ -101,3 +102,10 @@ fun shell(vararg args: String, debug: Boolean = false, workingDir: File? = null)
 //val isNewMac by lazy {
 //  isMac && shell("uname", "-m").trim() == "arm64"
 //}
+
+fun err(s: String): Nothing = matt.kbuild.err(s)
+
+inline fun <T> Iterable<T>.firstOrErr(msg:  String,predicate: (T) -> Boolean): T {
+  for (element in this) if (predicate(element)) return element
+  matt.kbuild.err(msg)
+}

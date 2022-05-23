@@ -9,8 +9,6 @@ import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.internal.impldep.org.intellij.lang.annotations.Language;
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile;
 
-import java.io.File;
-
 public class JigsawPlugin implements Plugin<Project> {
 
     @Override
@@ -29,9 +27,32 @@ public class JigsawPlugin implements Plugin<Project> {
                 }
                 ktSrc = ktSrc;
 
-                File d = ((KotlinCompile) ktSrc).getDestinationDirectory().get().getAsFile();
-                ((KotlinCompile) ktSrc).getDestinationDirectory().set(d);
-//                ((JavaCompile) jc).setDestinationDir(d);
+                throw new RuntimeException("""
+                        
+                        
+                        need to do this:
+                        
+                        Directory d = ((KotlinCompile) ktSrc).getDestinationDirectory().get();
+                                        ((KotlinCompile) ktSrc).getDestinationDirectory().set(d);
+                                        
+                                  
+                             but getting this: 
+                                  
+                                  
+                                  error: cannot access K2JVMCompilerArguments
+                                                  Directory d = ((KotlinCompile) ktSrc).getDestinationDirectory().get();
+                                                                                       ^
+                                    class file for org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments not found
+                                        
+                        """);
+
+
+
+
+
+                //                ((JavaCompile) jc).setDestinationDir(d);
+
+
                 /*apparently this duplicates something
                 https://stackoverflow.com/questions/47657755/building-a-kotlin-java-9-project-with-gradle*/
 

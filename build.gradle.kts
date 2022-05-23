@@ -1,28 +1,38 @@
+
+
+
 repositories {
   mavenCentral()
 }
 
 val rootProj = rootProject
+//rootProj.acc
 plugins {
   id("groovy")
   `groovy-gradle-plugin`
   `java-gradle-plugin`
+
   //  File(System.getProperty("user.dir") + "/libs.versions.toml")
-  println(File("../libs.versions.toml").canonicalPath)
+//  println(File("../libs.versions.toml").canonicalPath)
 
   /*yes, this is stupidly required because user.dir here is .gradle/daemon or something and plugin block dsl and super weird and restricted. look it up if you don't beleive me.*/
-  val stupidKtVersion = "1.6.21"
+  val stupidKtVersion = "1.7.0-RC" // "1.6.21"
 
   kotlin("jvm") version stupidKtVersion
 
-  `kotlin-dsl`/* version "2.1.4"*/
+//  `kotlin-dsl`/* version "2.1.4"*/
 }
-val ktversion = rootProject.projectDir.resolve("..").resolve("RootFiles").resolve("libs.versions.toml").readText()
+
+
+fun stupidTomlVersion(name: String) =
+  rootProject.projectDir.resolve("..").resolve("RootFiles").resolve("libs.versions.toml").readText()
 	.lines()
-	.first { it.contains("kotlin") }
+	.first { it.substringBefore("=").trim() == name }
 	.substringAfter("\"")
 	.substringBefore("\"")
 	.trim()
+
+val ktversion = stupidTomlVersion("kotlin")
 
 val thisFile = rootProject.projectDir.resolve("build.gradle.kts")
 require(thisFile.readText().substringAfter("stupidKtVersion").substringAfter("\"").substringBefore("\"") == ktversion)
@@ -49,6 +59,32 @@ gradlePlugin {
 }
 
 
+/*
 tasks.withType<JavaCompile> {
   this.options.compilerArgs.add("-Xlint:deprecation")
+}*/
+val javaLangVersion = JavaLanguageVersion.of(stupidTomlVersion("java"))
+val javaVersion = JavaVersion.toVersion(stupidTomlVersion("java"))
+allprojects {
+  apply<JavaPlugin>()
+  configure<JavaPluginExtension> {
+	toolchain {
+	  languageVersion.set(javaLangVersion)
+	}
+  }
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+	kotlinOptions {
+	  jvmTarget = stupidTomlVersion("java")
+	  languageVersion = stupidTomlVersion("ktlang")
+	}
+  }
+  if (this.projectDir.name == "kbuild") {
+	apply<JavaGradlePluginPlugin>()
+	configure<GradlePluginDevelopmentExtension>() {
+	  val dummyToAvoidWarning by plugins.creating {
+		id = "matt.kbuild.dummy"
+		implementationClass = "matt.kbuild.dummy.dummy"
+	  }
+	}
+  }
 }

@@ -154,8 +154,8 @@ abstract class GitProject<R>(val dir: String) {
 
   fun branch() = op(branchCommands())
 
-  fun addAllCommand() = wrapGitCommand("add","-A")
-  fun commitCommand() = wrapGitCommand("commit","-m","autocommit")
+  fun addAllCommand() = wrapGitCommand("add", "-A")
+  fun commitCommand() = wrapGitCommand("commit", "-m", "autocommit")
   fun addAll() = op(addAllCommand())
   fun commit() = op(commitCommand())
 
@@ -225,6 +225,7 @@ class SimpleGit(gitDir: String, val debug: Boolean = false): GitProject<String>(
 	projectDir.resolve(".git").absolutePath,
 	debug
   )
+
   override fun op(command: Array<String>): String {
 	return shell(*command, debug = debug, workingDir = gitProjectDir)
   }
@@ -258,7 +259,7 @@ fun File.hasParentWithNameStartingWith(s: String): Boolean =
   nameWithoutExtension.startsWith(s) || parentFile?.hasParentWithNameStartingWith(s) ?: false
 
 
-fun Exec.setExitHandler(op: (Int, String) -> Unit) {
+fun Exec.setExitHandler(op: (Int, String)->Unit) {
   isIgnoreExitValue = true
   val out = java.io.ByteArrayOutputStream()
   val err = java.io.ByteArrayOutputStream()
@@ -267,7 +268,7 @@ fun Exec.setExitHandler(op: (Int, String) -> Unit) {
 
   doLast {
 	val result = executionResult.get()
-	op(result.exitValue,standardOutput.toString() + errorOutput.toString())
+	op(result.exitValue, standardOutput.toString() + errorOutput.toString())
   }
 
   doLast {
