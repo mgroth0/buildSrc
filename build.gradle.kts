@@ -48,3 +48,7 @@ gradlePlugin {
   }
 }
 
+
+tasks.withType<JavaCompile> {
+  this.options.compilerArgs.add("-Xlint:deprecation")
+}
