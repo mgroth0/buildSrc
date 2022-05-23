@@ -10,7 +10,7 @@ import matt.kbuild.allStdOutAndStdErr
 //import matt.kbuild.isMac
 //import matt.kbuild.isNewMac
 
-
+val tempOutputFile = matt.kbuild.tempOutputFile
 val WINDOWS = matt.kbuild.Machine.WINDOWS
 val NEW_MAC = matt.kbuild.Machine.NEW_MAC
 val OLD_MAC = matt.kbuild.Machine.OLD_MAC
