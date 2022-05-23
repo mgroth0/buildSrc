@@ -142,7 +142,7 @@ fun gitShell(vararg c: String, debug: Boolean = false, workingDir: File? = null)
 }
 
 
-abstract class Git<R>(val dir: String) {
+abstract class GitProject<R>(val dir: String) {
 
   val gitProjectDir = File(dir).parentFile
 
@@ -209,7 +209,7 @@ abstract class Git<R>(val dir: String) {
   fun pull() = op(pullCommand())
 }
 
-class SimpleGit(gitDir: String, val debug: Boolean = false): Git<String>(gitDir) {
+class SimpleGit(gitDir: String, val debug: Boolean = false): GitProject<String>(gitDir) {
   constructor(projectDir: File, debug: Boolean = false): this(
 	projectDir.resolve(".git").absolutePath,
 	debug
@@ -235,7 +235,7 @@ class SimpleGit(gitDir: String, val debug: Boolean = false): Git<String>(gitDir)
   }
 }
 
-class ExecGit(val task: Exec, dir: String): Git<Unit>(dir) {
+class ExecGit(val task: Exec, dir: String): GitProject<Unit>(dir) {
   override fun op(command: Array<String>): Unit {
 	task.workingDir(gitProjectDir)
 	task.commandLine(*command)
