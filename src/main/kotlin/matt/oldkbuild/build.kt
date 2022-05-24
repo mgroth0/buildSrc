@@ -158,6 +158,8 @@ abstract class GitProject<R>(val dir: String, val debug: Boolean) {
   fun commitCommand() = wrapGitCommand("commit", "-m", "autocommit")
   fun addAll() = op(addAllCommand())
   fun commit() = op(commitCommand())
+  fun revParseHeadComand() = wrapGitCommand("git","rev-parse", "HEAD", quietApplicable = false)
+  fun currentCommitHash() = op(revParseHeadComand())
 
   val commandStart = arrayOf("git", "--git-dir=${dir}")
 
