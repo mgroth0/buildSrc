@@ -1,4 +1,4 @@
-include("kbuild")
+//include("kbuild")
 rootProject.name = "buildSrc" /*necessary to avoid some warning*/
 //enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
