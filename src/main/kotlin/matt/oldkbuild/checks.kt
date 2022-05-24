@@ -3,17 +3,33 @@
 import matt.kbuild.FLOW_FOLDER
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 /*all task classes have to be open I think*/
 open class MValidations: DefaultTask() {
+
+  @OutputFile
+  val outputFile = project.buildDir.resolve("reports").resolve("MValidations.txt")
+
+
   @TaskAction
   fun validate() {
-	withTimer("validate",quiet=true) {
-	  this.project.validate()
+
+
+	withTimer("validate", quiet = true) {
+	  val r = this.project.validate()
+	  outputFile.parentFile.mkdirs()
+	  if (!outputFile.exists() || outputFile.readText() != r) {
+		outputFile.writeText(r)
+	  }
 	}
+
+
   }
+
+
 }
 
 val EXPLANATIONS_FOLD = FixedFile(FLOW_FOLDER.resolve("explanations"))
@@ -23,7 +39,7 @@ val normalSourceSets = listOf("main", "test", "commonMain", "jvmMain")
 val testSourceSets = listOf(normalSourceSets[1])
 
 //@OptIn(ExperimentalStdlibApi::class)
-private fun Project.validate() {
+private fun Project.validate(): String {
 
   gitSubmodules
 	.filter { it.first != "buildSrc" }
@@ -307,6 +323,7 @@ private fun Project.validate() {
 	  }
 	}
   }
+  return "success"
 }
 
 class CheckFailedException(message: String): RuntimeException(message)
@@ -351,7 +368,7 @@ class SourceSetPackInfo(val srcSet: FixedFile, val ppi: ProjectPackInfo) {
 
   init {
 	if (!firstMade) {
-//	  println("example SourceSetPackInfo: ${srcSet.absolutePath}")
+	  //	  println("example SourceSetPackInfo: ${srcSet.absolutePath}")
 	  firstMade = true
 	}
 	require(srcSet.isDirectory) {
@@ -391,7 +408,7 @@ class SourceSetLanguagePackInfo(val f: FixedFile, val sspi: SourceSetPackInfo) {
 
   init {
 	if (!firstMade) {
-//	  println("example SourceSetLanguagePackInfo: ${f.absolutePath}")
+	  //	  println("example SourceSetLanguagePackInfo: ${f.absolutePath}")
 	  firstMade = true
 	}
 	val packs = mutableListOf<PackageInfo>()
