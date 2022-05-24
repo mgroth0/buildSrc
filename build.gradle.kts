@@ -59,7 +59,7 @@ dependencies {
   implementation("org.tomlj:tomlj:1.0.0")
   /*gradleKotlinDsl()*/
   /*implementation(project("kbuild"))*/
-  implementation("flow.KJ:kbuild:unspecified")
+  implementation("flow.KJ:kbuild:+")
 }
 
 /*
