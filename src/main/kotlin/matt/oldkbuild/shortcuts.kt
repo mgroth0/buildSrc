@@ -3,8 +3,9 @@
 
 import java.io.File
 import matt.kbuild.recurse
-import matt.kbuild.port
-import matt.kbuild.Sender
+import matt.kbuild.socket.port
+import matt.kbuild.socket.SingleSender
+import matt.kbuild.socket.MultiSender
 import matt.kbuild.proc
 import matt.kbuild.allStdOutAndStdErr
 import matt.kbuild.cap
@@ -30,7 +31,7 @@ fun <T> T.recarse(includeSelf: Boolean = true, rchildren: (T)->Iterable<T>): Seq
 fun part(name: String) = port(name)
 
 
-fun Sender.open(file: File) = open(file.absolutePath)
+fun SingleSender.open(file: File) = open(file.absolutePath)
 
 
 enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
