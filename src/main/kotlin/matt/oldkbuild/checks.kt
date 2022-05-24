@@ -10,6 +10,8 @@ import java.io.File
 /*all task classes have to be open I think*/
 open class MValidations: DefaultTask() {
 
+
+  /*THIS IS NECCESARY FOR UP-TO-DATE CHECKS!!!!!*/
   @OutputFile
   val outputFile = project.buildDir.resolve("reports").resolve("MValidations.txt")
 
