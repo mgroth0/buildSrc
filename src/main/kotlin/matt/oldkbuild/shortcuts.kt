@@ -8,6 +8,10 @@ import matt.kbuild.Sender
 import matt.kbuild.proc
 import matt.kbuild.allStdOutAndStdErr
 import matt.kbuild.cap
+import matt.kbuild.git.ExecGit
+import matt.kbuild.git.SimpleGit
+import org.gradle.api.Project
+import org.gradle.api.tasks.Exec
 
 //import matt.kbuild.isMac
 //import matt.kbuild.isNewMac
@@ -86,20 +90,6 @@ fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
 }
 
 
-fun shell(vararg args: String, debug: Boolean = false, workingDir: File? = null): String {
-  if (debug) {
-	println("running command: ${args.joinToString(" ")}")
-  }
-  val p = proc(
-	wd = workingDir,
-	args = args
-  )
-  val output = p.allStdOutAndStdErr()
-  if (debug) {
-	println("output: ${output}")
-  }
-  return output
-}
 
 //val isNewMac by lazy {
 //  isMac && shell("uname", "-m").trim() == "arm64"
@@ -110,4 +100,22 @@ fun err(s: String): Nothing = matt.kbuild.err(s)
 inline fun <T> Iterable<T>.firstOrErr(msg:  String,predicate: (T) -> Boolean): T {
   for (element in this) if (predicate(element)) return element
   matt.kbuild.err(msg)
+}
+
+val Project.gitFolder get() = projectDir.listFiles()!!.first { it.name == ".git" }
+val Project.isGitProject get() = ".git" in projectDir.list()!!
+
+
+private val simpleGits = mutableMapOf<Project, SimpleGit>()
+val Project.simpleGit: SimpleGit
+  get() {
+	return simpleGits[this] ?: SimpleGit(gitDir = this.gitFolder.absolutePath).also { simpleGits[this] = it }
+  }
+
+
+fun Project.execGitFor(task: Exec) = ExecGit(task = task, dir = this.gitFolder.absolutePath)
+fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.list()!! }!!.let { f ->
+  ExecGit(
+	task = task, dir = f.resolve(".git").absolutePath
+  )
 }
