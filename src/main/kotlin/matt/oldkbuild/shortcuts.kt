@@ -9,7 +9,7 @@ import matt.kbuild.socket.SingleSender
 import matt.kbuild.socket.MultiSender
 import matt.kbuild.proc
 import matt.kbuild.allStdOutAndStdErr
-import matt.kbuild.cap
+import matt.klib.lang.cap
 import matt.kbuild.git.ExecGit
 import matt.kbuild.git.SimpleGit
 import org.gradle.api.Action
