@@ -7,6 +7,10 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import java.time.Instant
+import java.time.Year
+import java.util.Calendar
+import java.util.Date
 
 /*all task classes have to be open I think*/
 open class MValidations: DefaultTask() {
@@ -67,19 +71,19 @@ private fun Project.validate(): String {
   }
 
 
-	warn("""
-	  
+	/*I had trouble a year or so ago, but now I'm much smarter. lets give this a chance (reimplemented maven publish in may of 2022)*/
+	if (Calendar.getInstance().get(Calendar.YEAR) > 2022) {
 	  this.pluginManager.findPlugin("maven-publish")?.let {
 
-	  println("PROJ: dollarSign it")
-	  bad(
-		"\n\nNo.\n\n" + (EXPLANATIONS_FOLD["noMavenPublish.txt"].takeIf { it.exists() }?.readText()
-		  ?.trimIndent()
-		  ?: "")
-	  )
+		println("PROJ: dollarSign it")
+		bad(
+		  "\n\nNo.\n\n" + (EXPLANATIONS_FOLD["noMavenPublish.txt"].takeIf { it.exists() }?.readText()
+			?.trimIndent()
+			?: "")
+		)
+	  }
 	}
-	  
-	""".trimIndent())
+
 
   }
 
@@ -110,9 +114,9 @@ private fun Project.validate(): String {
 	val ppi = ProjectPackInfo(it)
 	ppis.add(ppi)
   }
-//  allprojects { proj: Project ->
-//
-//  }
+  //  allprojects { proj: Project ->
+  //
+  //  }
   ppis.forEach {
 	it.packs?.forEach { p1 ->
 	  packs.add(p1)
@@ -315,7 +319,7 @@ private fun Project.validate(): String {
 	packs.forEach { p2 ->
 	  if (p1.hasSourceFiles && p2.hasSourceFiles && p1 != p2) {
 		if (p1.name == p2.name) {
-		  ensure(p1.isTest || p2.isTest) {
+		  ensure(p1.ppi.isMultiplatform || (p1.isTest || p2.isTest)) {
 			"""
 			  if there is a duplicate package name, one should be a test
 			  
@@ -353,6 +357,7 @@ class ProjectPackInfo(val project: Project) {
   val isJS = name == "kjs"
   val dir = project.dir
   val src = dir["src"]
+  val isMultiplatform = dir.hasParentWithNameStartingWith("k")
   val srcExists = src.exists()
   val srcSets = src.listFiles()
 	?.filter { it.name != ".DS_Store" }
