@@ -56,8 +56,6 @@ enum class ModType { APP, CLAPP, APPLIB, LIB, ABSTRACT }
 val desktopFile by lazy { File(System.getProperty("user.home")).resolve("Desktop") }
 
 
-
-
 fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
   val mainClassName = subproject.cap().plus("Main")
   val mainKt = "$mainClassName.Kt"
@@ -91,14 +89,13 @@ fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
 }
 
 
-
 //val isNewMac by lazy {
 //  isMac && shell("uname", "-m").trim() == "arm64"
 //}
 
 fun err(s: String): Nothing = matt.kjlib.lang.err(s)
 
-inline fun <T> Iterable<T>.firstOrErr(msg:  String,predicate: (T) -> Boolean): T {
+inline fun <T> Iterable<T>.firstOrErr(msg: String, predicate: (T)->Boolean): T {
   for (element in this) if (predicate(element)) return element
   matt.kjlib.lang.err(msg)
 }
@@ -119,4 +116,42 @@ fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.li
   ExecGit(
 	task = task, dir = f.resolve(".git").absolutePath
   )
+}
+
+fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
+
+  val sp = this
+
+  val lastVersionFile = sp.projectDir.resolve("lastversion.txt")
+  var firstPublish = !lastVersionFile.exists()
+  if (firstPublish) lastVersionFile.writeText("0")
+  var thisVersion = lastVersionFile.readText().toInt() + 1
+  sp.version = thisVersion.toString()
+
+  sp.tasks.apply {
+	val ck = this.getAt(compileKotlinJvmTaskName)
+	ck.doLast {
+	  if (firstPublish || it.didWork) {
+		lastVersionFile.writeText(thisVersion.toString())
+	  }
+	}
+
+	this.getAt("publishToMavenLocal").apply {
+	  dependsOn(sp.tasks.getAt("jar"))
+	  onlyIf {
+		firstPublish || ck.didWork
+	  }
+	}
+
+	//	  kjProj.afterEvaluate {
+
+	sp.afterEvaluate {
+	  /*this is only for gradle plugins*/
+	  if (sp.tasks.map { it.name }.contains("publishPluginMavenPublicationToMavenLocal")) {
+		getAt("publishPluginMavenPublicationToMavenLocal").onlyIf {
+		  firstPublish || ck.didWork
+		}
+	  }
+	}
+  }
 }
