@@ -21,10 +21,10 @@ import org.gradle.api.tasks.Exec
 //import matt.kbuild.isNewMac
 
 val tempOutputFile = matt.kbuild.tempOutputFile
-val WINDOWS = matt.kbuild.Machine.WINDOWS
-val NEW_MAC = matt.kbuild.Machine.NEW_MAC
-val OLD_MAC = matt.kbuild.Machine.OLD_MAC
-val thisMachine: matt.kbuild.Machine get() = matt.kbuild.thisMachine
+val WINDOWS = matt.klib.sys.Machine.WINDOWS
+val NEW_MAC = matt.klib.sys.Machine.NEW_MAC
+val OLD_MAC = matt.klib.sys.Machine.OLD_MAC
+val thisMachine: matt.klib.sys.Machine get() = matt.kbuild.thisMachine
 val ismac get() = matt.kbuild.ismac
 val isNewMac get() = matt.kbuild.isNewMac
 
