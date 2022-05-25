@@ -124,7 +124,7 @@ fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.li
 
 val LAST_VERSION_TXT = "lastversion.txt"
 
-fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
+fun Project.setupMavenTasks(compileKotlinJvmTaskName: String, jarTaskName: String) {
 
   val sp = this
 
@@ -146,7 +146,10 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
 	})
 
 	this.getAt("publishToMavenLocal").apply {
-	  dependsOn(sp.tasks.getAt("jar"))
+	  tasks.forEach {
+		println("${it.path}")
+	  }
+	  dependsOn(sp.tasks.getAt(jarTaskName))
 	  this.setOnlyIf(object: Spec<Task> {
 		override fun isSatisfiedBy(element: Task?): Boolean {
 		  return firstPublish || ck.didWork
