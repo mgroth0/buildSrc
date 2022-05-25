@@ -74,12 +74,12 @@ even if I don't use the plugin descriptor, this should disable the warning:
 "No valid plugin descriptors were found in META-INF/gradle-plugins"
 
 */
-gradlePlugin {
-  val greeting by plugins.creating {
-	id = "matt.jbuild.greeting"
-	implementationClass = "matt.jbuild.greeting.JGreetingPlugin"
-  }
-}
+//gradlePlugin {
+//  val greeting by plugins.creating {
+//	id = "matt.jbuild.greeting"
+//	implementationClass = "matt.jbuild.greeting.JGreetingPlugin"
+//  }
+//}
 
 
 /*
@@ -88,26 +88,17 @@ tasks.withType<JavaCompile> {
 }*/
 val javaLangVersion = JavaLanguageVersion.of(stupidTomlVersion("java"))
 val javaVersion = JavaVersion.toVersion(stupidTomlVersion("java"))
-allprojects {
-  apply<JavaPlugin>()
-  configure<JavaPluginExtension> {
-	toolchain {
-	  languageVersion.set(javaLangVersion)
-	}
-  }
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-	kotlinOptions {
-	  jvmTarget = stupidTomlVersion("java")
-	  languageVersion = stupidTomlVersion("ktlang")
-	}
-  }
-  if (this.projectDir.name == "kbuild") {
-	apply<JavaGradlePluginPlugin>()
-	configure<GradlePluginDevelopmentExtension>() {
-	  val dummyToAvoidWarning by plugins.creating {
-		id = "matt.kbuild.dummy"
-		implementationClass = "matt.kbuild.dummy.dummy"
-	  }
-	}
-  }
-}
+//allprojects {
+//  apply<JavaPlugin>()
+//  configure<JavaPluginExtension> {
+//	toolchain {
+//	  languageVersion.set(javaLangVersion)
+//	}
+//  }
+//  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+//	kotlinOptions {
+//	  jvmTarget = stupidTomlVersion("java")
+//	  languageVersion = stupidTomlVersion("ktlang")
+//	}
+//  }
+//}
