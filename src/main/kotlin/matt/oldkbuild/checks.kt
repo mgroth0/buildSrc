@@ -47,7 +47,9 @@ private fun Project.validate(): String {
 	.filter { it.first != "buildSrc" }
 	.filter { it.first != "RootFiles" }
 	.forEach {
-	  ensure(":" + it.first.replace("_", ":").uppercase() in this.allprojects.map { it.path.uppercase() }) {
+	  val expected = ":" + it.first.replace("_", ":").uppercase()
+	  ensure(expected in this.allprojects.map { it.path.uppercase() }) {
+		println("expected=$expected")
 		allprojects.forEach {
 		  println("\t${it.path}")
 		}
