@@ -11,7 +11,10 @@ import matt.kbuild.allStdOutAndStdErr
 import matt.kbuild.cap
 import matt.kbuild.git.ExecGit
 import matt.kbuild.git.SimpleGit
+import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.specs.Spec
 import org.gradle.api.tasks.Exec
 
 //import matt.kbuild.isMac
@@ -130,17 +133,22 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
 
   sp.tasks.apply {
 	val ck = this.getAt(compileKotlinJvmTaskName)
-	ck.doLast {
-	  if (firstPublish || it.didWork) {
-		lastVersionFile.writeText(thisVersion.toString())
+
+	ck.doLast("pleasework",object: Action<Task> {
+	  override fun execute(t: Task) {
+		if (firstPublish || t.didWork) {
+		  lastVersionFile.writeText(thisVersion.toString())
+		}
 	  }
-	}
+	})
 
 	this.getAt("publishToMavenLocal").apply {
 	  dependsOn(sp.tasks.getAt("jar"))
-	  onlyIf {
-		firstPublish || ck.didWork
-	  }
+	  this.setOnlyIf(object: Spec<Task> {
+		override fun isSatisfiedBy(element: Task?): Boolean {
+		  return firstPublish || ck.didWork
+		}
+	  })
 	}
 
 	//	  kjProj.afterEvaluate {
@@ -148,9 +156,13 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
 	sp.afterEvaluate {
 	  /*this is only for gradle plugins*/
 	  if (sp.tasks.map { it.name }.contains("publishPluginMavenPublicationToMavenLocal")) {
-		getAt("publishPluginMavenPublicationToMavenLocal").onlyIf {
-		  firstPublish || ck.didWork
-		}
+		getAt("publishPluginMavenPublicationToMavenLocal").onlyIf(
+		  object: Spec<Task> {
+			override fun isSatisfiedBy(element: Task?): Boolean {
+			  return firstPublish || ck.didWork
+			}
+		  }
+		)
 	  }
 	}
   }
