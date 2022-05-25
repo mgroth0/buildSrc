@@ -62,9 +62,11 @@ dependencies {
   /*implementation(project("kbuild"))*/
 
 
-  /*implementation("flow.KJ:kbuild:48") *//*SAFE!*/
+  /*SAFE!*/
+  implementation("flow.KJ:kbuild:63")
 
-  implementation("flow.KJ:kbuild:+")
+
+  /*implementation("flow.KJ:kbuild:+")*/
 
   implementation("flow.KJ.kjlib:lang:+")
 }
