@@ -122,12 +122,14 @@ fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.li
   )
 }
 
+val LAST_VERSION_TXT = "lastversion.txt"
+
 fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
 
   val sp = this
 
-  val lastVersionFile = sp.projectDir.resolve("lastversion.txt")
-  var firstPublish = !lastVersionFile.exists()
+  val lastVersionFile = sp.projectDir.resolve(LAST_VERSION_TXT)
+  var firstPublish = !lastVersionFile.exists() || lastVersionFile.readText().isBlank()
   if (firstPublish) lastVersionFile.writeText("0")
   var thisVersion = lastVersionFile.readText().toInt() + 1
   sp.version = thisVersion.toString()
