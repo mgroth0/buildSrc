@@ -3,7 +3,7 @@
 
 import java.io.File
 
-import matt.kbuild.recurse
+import matt.kjlib.stream.recurse.recurse
 import matt.kbuild.socket.port
 import matt.kbuild.socket.SingleSender
 import matt.kbuild.socket.MultiSender
