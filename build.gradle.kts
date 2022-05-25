@@ -60,6 +60,7 @@ dependencies {
   /*gradleKotlinDsl()*/
   /*implementation(project("kbuild"))*/
   implementation("flow.KJ:kbuild:+")
+  implementation("flow.KJ.kjlib:lang:+")
 }
 
 /*
