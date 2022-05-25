@@ -25,7 +25,7 @@ val WINDOWS = matt.klib.sys.Machine.WINDOWS
 val NEW_MAC = matt.klib.sys.Machine.NEW_MAC
 val OLD_MAC = matt.klib.sys.Machine.OLD_MAC
 val thisMachine: matt.klib.sys.Machine get() = matt.kbuild.thisMachine
-val ismac get() = matt.kbuild.ismac
+val ismac get() = true.also { println("FIX THIS ") }/*matt.kjlib.lang.ismac*/
 val isNewMac get() = matt.kbuild.isNewMac
 
 fun <T> T.recarse(includeSelf: Boolean = true, rchildren: (T)->Iterable<T>): Sequence<T> =
@@ -134,7 +134,7 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
   sp.tasks.apply {
 	val ck = this.getAt(compileKotlinJvmTaskName)
 
-	ck.doLast("pleasework",object: Action<Task> {
+	ck.doLast("pleasework", object: Action<Task> {
 	  override fun execute(t: Task) {
 		if (firstPublish || t.didWork) {
 		  lastVersionFile.writeText(thisVersion.toString())
