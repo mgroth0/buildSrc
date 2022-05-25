@@ -25,7 +25,7 @@ val WINDOWS = matt.klib.sys.Machine.WINDOWS
 val NEW_MAC = matt.klib.sys.Machine.NEW_MAC
 val OLD_MAC = matt.klib.sys.Machine.OLD_MAC
 val thisMachine: matt.klib.sys.Machine get() = matt.kbuild.thisMachine
-val ismac get() = true.also { println("FIX THIS ") }/*matt.kjlib.lang.ismac*/
+val ismac get() = matt.kjlib.lang.jlang.ismac
 val isNewMac get() = matt.kbuild.isNewMac
 
 fun <T> T.recarse(includeSelf: Boolean = true, rchildren: (T)->Iterable<T>): Sequence<T> =
