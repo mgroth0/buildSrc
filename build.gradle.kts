@@ -23,6 +23,7 @@ plugins {
 
   kotlin("jvm") version stupidKtVersion
 
+  `kotlin-dsl`
 //  `kotlin-dsl`/* version "2.1.4"*/
 }
 

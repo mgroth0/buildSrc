@@ -167,3 +167,4 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String) {
 	}
   }
 }
+

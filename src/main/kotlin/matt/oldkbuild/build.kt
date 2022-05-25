@@ -127,3 +127,8 @@ fun Exec.setExitHandler(op: (Int, String)->Unit) {
   }
 }
 
+fun org.gradle.kotlin.dsl.DependencyHandlerScope.implementations(vararg deps: Any) {
+  deps.forEach {
+	add("implementation", it)
+  }
+}

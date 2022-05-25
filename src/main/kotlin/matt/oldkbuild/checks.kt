@@ -1,6 +1,7 @@
 @file:Suppress("PackageDirectoryMismatch")
 
 import matt.kbuild.FLOW_FOLDER
+import matt.klib.log.warn
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.OutputFile
@@ -47,8 +48,8 @@ private fun Project.validate(): String {
 	.filter { it.first != "buildSrc" }
 	.filter { it.first != "RootFiles" }
 	.forEach {
-	  val expected = ":" + it.first.replace("_", ":").uppercase()
-	  ensure(expected in this.allprojects.map { it.path.uppercase() }) {
+	  val expected = ":" + it.first.replace("_", ":").toUpperCase()
+	  ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
 		println("expected=$expected")
 		allprojects.forEach {
 		  println("\t${it.path}")
@@ -66,15 +67,20 @@ private fun Project.validate(): String {
   }
 
 
-	this.pluginManager.findPlugin("maven-publish")?.let {
+	warn("""
+	  
+	  this.pluginManager.findPlugin("maven-publish")?.let {
 
-	  println("PROJ:$it")
+	  println("PROJ: dollarSign it")
 	  bad(
 		"\n\nNo.\n\n" + (EXPLANATIONS_FOLD["noMavenPublish.txt"].takeIf { it.exists() }?.readText()
 		  ?.trimIndent()
 		  ?: "")
 	  )
 	}
+	  
+	""".trimIndent())
+
   }
 
   var buildSrcBS = Rdir.resolve("buildSrc").resolve("build.gradle.kts")
@@ -100,10 +106,13 @@ private fun Project.validate(): String {
 
   val packs = mutableListOf<PackageInfo>()
   val ppis = mutableListOf<ProjectPackInfo>()
-  allprojects { proj ->
-	val ppi = ProjectPackInfo(proj)
+  allprojects.forEach {
+	val ppi = ProjectPackInfo(it)
 	ppis.add(ppi)
   }
+//  allprojects { proj: Project ->
+//
+//  }
   ppis.forEach {
 	it.packs?.forEach { p1 ->
 	  packs.add(p1)
