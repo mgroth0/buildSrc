@@ -16,6 +16,8 @@ import matt.kjlib.socket.port
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.artifacts.ProjectDependency
+import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.specs.Spec
 import org.gradle.api.tasks.Exec
 
@@ -114,6 +116,13 @@ val Project.simpleGit: SimpleGit
 	return simpleGits[this] ?: SimpleGit(gitDir = this.gitFolder.absolutePath).also { simpleGits[this] = it }
   }
 
+fun DependencyHandler.jvm(project: ProjectDependency) = project(
+  mapOf(
+	"path" to project.dependencyProject.path,
+	"configuration" to "jvmRuntimeElements"
+  )
+)
+
 
 fun Project.execGitFor(task: Exec) = ExecGit(task = task, dir = this.gitFolder.absolutePath)
 fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.list()!! }!!.let { f ->
@@ -133,7 +142,6 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String, jarTaskName: Strin
   //  if (firstPublish) lastVersionFile.writeText("0")
   //  var thisVersion = lastVersionFile.readText().toInt() + 1
   //  sp.version = thisVersion.toString()
-
 
 
   sp.tasks.apply {

@@ -53,6 +53,8 @@ dependencies {
   DO NOT DIRECTELY DEPEND ON ANY OTHER OF MY OWN MODULES OTHER THAN KBUILD.
   ANY OTHER DEPENDENCIES OF MY OWN MODULES SHOULD GO INTO KBUILD IN THE "API" CONFIG.
 
+  thiswill also ensure that builSrc doesnt try to use lower leverl more uptatd libs like the newest klib vefore the higher libs likekjlib have a compatible version. this was a nother bg reason i had issues  before
+
   IF I HAVE ANY ISSUES, REMOVE THE "+" VERSION BELOW AND FIND THE LAST STABLE VERSION
   */
   implementation("matt.KJ:kbuild:+")

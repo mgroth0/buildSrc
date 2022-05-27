@@ -335,7 +335,7 @@ private fun Project.validate(): String {
 			"they should not both be tests"
 		  }
 		  ensure(p1.ppi == p2.ppi) {
-			"they should be in the same project"
+			"$p1 and $$p2 should be in the same project, but $p1 is in ${p1.ppi} and p2 is in ${p2.ppi}"
 		  }
 		}
 	  }
@@ -381,6 +381,11 @@ class ProjectPackInfo(val project: Project) {
 
 /*example SourceSetPackInfo: /Users/matt/Desktop/registered/todo/flow/kjs/src/main*/
 class SourceSetPackInfo(val srcSet: FixedFile, val ppi: ProjectPackInfo) {
+
+  override fun toString(): String {
+	return "${SourceSetPackInfo::class} with srcSet=$srcSet,ppi=$ppi"
+  }
+
   companion object {
 	var firstMade = false
   }
@@ -416,6 +421,11 @@ class SourceSetPackInfo(val srcSet: FixedFile, val ppi: ProjectPackInfo) {
 
 /*example SourceSetLanguagePackInfo: /Users/matt/Desktop/registered/todo/flow/kjs/src/main/kotlin*/
 class SourceSetLanguagePackInfo(val f: FixedFile, val sspi: SourceSetPackInfo) {
+
+  override fun toString(): String {
+	return "${SourceSetLanguagePackInfo::class} with f=$f,sspi=$sspi"
+  }
+
   val packages: List<PackageInfo>
   val name = (f.name)
 
@@ -450,6 +460,10 @@ class PackageInfo(val f: FixedFile, val sslpi: SourceSetLanguagePackInfo) {
   val ppi = sspi.ppi
   val name = f.absolutePath.replace(sslpi.f.absolutePath, "").replace(File.separator, ".").removePrefix(".")
 	.removeSuffix(".")
+
+  override fun toString(): String {
+	return "${PackageInfo::class} with f=$f,sslpi=$sslpi"
+  }
   val names = name.split(".")
   val isTest = sspi.isTest
   val isMainPack = name.equals(
