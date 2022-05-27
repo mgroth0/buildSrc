@@ -15,7 +15,7 @@ plugins {
   `groovy-gradle-plugin`
   `java-gradle-plugin`
 
-  `embedded-kotlin`
+  /*`embedded-kotlin`*/
 
   //  File(System.getProperty("user.dir") + "/libs.versions.toml")
 //  println(File("../libs.versions.toml").canonicalPath)
