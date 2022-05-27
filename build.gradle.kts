@@ -54,7 +54,7 @@ dependencies {
   println("dissect shadow jar sizes")
 
   implementation("matt.KJ:kbuild:+")
-  implementation("matt.k:klib:+")
+//  implementation("matt.k:klib:+")
   implementation("matt.KJ.kjlib:lang:+")
   implementation("matt.KJ.kjlib:stream:+")
   implementation("matt.KJ.kjlib:socket:+")
