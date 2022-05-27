@@ -99,7 +99,6 @@ val gitSubmodules
 	}
 
 
-
 fun File.hasParentWithNameStartingWith(s: String): Boolean =
   nameWithoutExtension.startsWith(s) || parentFile?.hasParentWithNameStartingWith(s) ?: false
 
