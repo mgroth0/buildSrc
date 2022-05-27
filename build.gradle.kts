@@ -46,11 +46,15 @@ dependencies {
 
 
   println("gotta eliminate flow/kcomp from group names so they arent project-specific")
-  println("and deleted registeredDir.txt")
-  implementation("flow.KJ:kbuild:91")
-  implementation("flow.k:klib:38")
+
+  println("NEED MUCH BETTER DEPENDENCY RESOLUTION HERE BECAUSE IM GETTING INCOMPATIBLE VERSIONS")
+
+  implementation("flow.KJ:kbuild:+")
+  implementation("flow.k:klib:+")
   implementation("flow.KJ.kjlib:lang:+")
   implementation("flow.KJ.kjlib:stream:+")
+  implementation("flow.KJ.kjlib:socket:+")
+
 }
 
 /*

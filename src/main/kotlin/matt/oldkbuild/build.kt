@@ -5,7 +5,7 @@ so buildscripts dont need to use import statements????
 see https://github.com/gradle/gradle/issues/7557
 */
 
-import matt.kbuild.FLOW_FOLDER
+import matt.klib.commons.FLOW_FOLDER
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import org.gradle.api.Action
 import org.gradle.api.Project
@@ -30,7 +30,7 @@ fun Project.kotlinCompile(
 I also do this in buildSrc/build.gradle.kts
 without calling this. It can't be helped easily.*/
 fun tomlVersion(name: String) =
-  Toml.parse(FLOW_FOLDER.resolve("RootFiles").resolve("libs.versions.toml").toPath()).getTable("versions")!!
+  Toml.parse(FLOW_FOLDER!!.resolve("RootFiles").resolve("libs.versions.toml").toPath()).getTable("versions")!!
 	.getString(name)!!
 
 

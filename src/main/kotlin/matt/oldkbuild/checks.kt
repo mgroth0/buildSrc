@@ -1,6 +1,7 @@
 @file:Suppress("PackageDirectoryMismatch")
 
-import matt.kbuild.FLOW_FOLDER
+//import matt.kbuild.FLOW_FOLDER
+import matt.klib.commons.FLOW_FOLDER
 import matt.klib.log.warn
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -39,7 +40,7 @@ open class MValidations: DefaultTask() {
 
 }
 
-val EXPLANATIONS_FOLD = FixedFile(FLOW_FOLDER.resolve("explanations"))
+val EXPLANATIONS_FOLD = FixedFile(FLOW_FOLDER!!.resolve("explanations"))
 
 val normalLanguages = listOf("kotlin", "java", "resources")
 val normalSourceSets = listOf("main", "test", "commonMain", "jvmMain")

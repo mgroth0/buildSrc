@@ -9,8 +9,10 @@ import matt.kbuild.allStdOutAndStdErr
 import matt.klib.lang.cap
 import matt.kbuild.git.ExecGit
 import matt.kbuild.git.SimpleGit
-import matt.kbuild.socket.SingleSender
-import matt.kbuild.socket.port
+import matt.kjlib.socket.SingleSender
+import matt.kjlib.socket.port
+//import matt.kbuild.socket.SingleSender
+//import matt.kbuild.socket.port
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -18,16 +20,15 @@ import org.gradle.api.specs.Spec
 import org.gradle.api.tasks.Exec
 
 //import matt.kbuild.isMac
-//import matt.kbuild.isNewMac
+//import matt.klib.commons.isNewMac
 
-val tempOutputFile = matt.kbuild.tempOutputFile
+//val tempOutputFile = matt.kbuild.tempOutputFile
 val WINDOWS = matt.klib.sys.Machine.WINDOWS
 val NEW_MAC = matt.klib.sys.Machine.NEW_MAC
 val OLD_MAC = matt.klib.sys.Machine.OLD_MAC
-val thisMachine: matt.klib.sys.Machine get() = matt.kbuild.thisMachine
-val ismac get() = matt.kjlib.lang.jlang.ismac
-val isNewMac get() = matt.kbuild.isNewMac
-
+val thisMachine: matt.klib.sys.Machine get() = matt.klib.commons.thisMachine
+val ismac get() = matt.klib.commons.ismac
+val isNewMac get() = matt.klib.commons.isNewMac
 fun <T> T.recarse(includeSelf: Boolean = true, rchildren: (T)->Iterable<T>): Sequence<T> =
   recurse(includeSelf, rchildren)
 
