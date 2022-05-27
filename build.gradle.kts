@@ -45,16 +45,11 @@ dependencies {
   implementation("org.tomlj:tomlj:1.0.0")
 
 
-  println("gotta eliminate flow/kcomp from group names so they arent project-specific")
-
   println("NEED MUCH BETTER DEPENDENCY RESOLUTION HERE BECAUSE IM GETTING INCOMPATIBLE VERSIONS")
-
   println("version incrementing is unsafe across projects with git etc.")
 
-  println("dissect shadow jar sizes")
-
   implementation("matt.KJ:kbuild:+")
-//  implementation("matt.k:klib:+")
+  //  implementation("matt.k:klib:+")
   implementation("matt.KJ.kjlib:lang:+")
   implementation("matt.KJ.kjlib:stream:+")
   implementation("matt.KJ.kjlib:socket:+")
