@@ -46,7 +46,6 @@ dependencies {
 
 
   println("NEED MUCH BETTER DEPENDENCY RESOLUTION HERE BECAUSE IM GETTING INCOMPATIBLE VERSIONS")
-  println("version incrementing is unsafe across projects with git etc.")
 
   implementation("matt.KJ:kbuild:+")
   //  implementation("matt.k:klib:+")
