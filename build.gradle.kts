@@ -4,25 +4,18 @@ repositories {
 }
 
 
-val rootProj = rootProject
-//rootProj.acc
 plugins {
   id("groovy")
   `groovy-gradle-plugin`
   `java-gradle-plugin`
 
-  /*`embedded-kotlin`*/
-
-  //  File(System.getProperty("user.dir") + "/libs.versions.toml")
-  //  println(File("../libs.versions.toml").canonicalPath)
 
   /*yes, this is stupidly required because user.dir here is .gradle/daemon or something and plugin block dsl and super weird and restricted. look it up if you don't beleive me.*/
   val stupidKtVersion = "1.7.0-RC" // "1.6.21"
 
   kotlin("jvm") version stupidKtVersion
 
-  `kotlin-dsl` /*version "2.3.3"*/
-  //  `kotlin-dsl`/* version "2.1.4"*/
+  `kotlin-dsl`
 }
 
 
@@ -34,12 +27,6 @@ fun stupidTomlVersion(name: String) =
 	.substringBefore("\"")
 	.trim()
 
-//tasks.wrapper {
-//  distributionType = Wrapper.DistributionType.ALL
-//  val tomlGradleVersion = stupidTomlVersion("gradle")
-//  println("buildSrc wrapper gradle version set to $tomlGradleVersion")
-//  gradleVersion = tomlGradleVersion
-//}
 
 val verbose = false
 if (verbose) {
@@ -56,16 +43,12 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${ktversion}")
   implementation("org.apache.maven:maven-artifact:3.8.1")
   implementation("org.tomlj:tomlj:1.0.0")
-  /*gradleKotlinDsl()*/
-  /*implementation(project("kbuild"))*/
 
 
-  /*SAFE!*/
-  /*implementation("flow.KJ:kbuild:63")*/
-
-
-  implementation("flow.KJ:kbuild:+")
-
+  println("gotta eliminate flow/kcomp from group names so they arent project-specific")
+  println("and deleted registeredDir.txt")
+  implementation("flow.KJ:kbuild:91")
+  implementation("flow.k:klib:38")
   implementation("flow.KJ.kjlib:lang:+")
   implementation("flow.KJ.kjlib:stream:+")
 }
