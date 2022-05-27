@@ -146,9 +146,9 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String, jarTaskName: Strin
 	})
 
 	this.getAt("publishToMavenLocal").apply {
-	  tasks.forEach {
+	  /*tasks.forEach {
 		println("${it.path}")
-	  }
+	  }*/
 	  dependsOn(sp.tasks.getAt(jarTaskName))
 	  this.setOnlyIf(object: Spec<Task> {
 		override fun isSatisfiedBy(element: Task?): Boolean {
