@@ -49,6 +49,8 @@ dependencies {
 
   println("NEED MUCH BETTER DEPENDENCY RESOLUTION HERE BECAUSE IM GETTING INCOMPATIBLE VERSIONS")
 
+  println("dissect shadow jar sizes")
+
   implementation("flow.KJ:kbuild:+")
   implementation("flow.k:klib:+")
   implementation("flow.KJ.kjlib:lang:+")
