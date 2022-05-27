@@ -57,7 +57,7 @@ dependencies {
 
   IF I HAVE ANY ISSUES, REMOVE THE "+" VERSION BELOW AND FIND THE LAST STABLE VERSION
   */
-  implementation("matt.KJ:kbuild:+")
+  implementation("matt.KJ:kbuild:1653680810527")
   //  implementation("matt.k:klib:+")
 //  implementation("matt.KJ.kjlib:lang:+")
 //  implementation("matt.KJ.kjlib:stream:+")
