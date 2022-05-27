@@ -51,11 +51,11 @@ dependencies {
 
   println("dissect shadow jar sizes")
 
-  implementation("flow.KJ:kbuild:+")
-  implementation("flow.k:klib:+")
-  implementation("flow.KJ.kjlib:lang:+")
-  implementation("flow.KJ.kjlib:stream:+")
-  implementation("flow.KJ.kjlib:socket:+")
+  implementation("matt.KJ:kbuild:+")
+  implementation("matt.k:klib:+")
+  implementation("matt.KJ.kjlib:lang:+")
+  implementation("matt.KJ.kjlib:stream:+")
+  implementation("matt.KJ.kjlib:socket:+")
 
 }
 
