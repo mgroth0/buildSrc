@@ -21,7 +21,7 @@ plugins {
 
   kotlin("jvm") version stupidKtVersion
 
-  `kotlin-dsl` version "2.3.3"
+  `kotlin-dsl` /*version "2.3.3"*/
   //  `kotlin-dsl`/* version "2.1.4"*/
 }
 
