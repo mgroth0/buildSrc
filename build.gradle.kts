@@ -47,11 +47,19 @@ dependencies {
 
   println("NEED MUCH BETTER DEPENDENCY RESOLUTION HERE BECAUSE IM GETTING INCOMPATIBLE VERSIONS")
 
+  /*KEEP THIS LIMITED TO matt.KJ:kbuild, AND LET THAT HAVE API DEPENDENCIES ON ANYTHING ELSE I NEED.
+  THEREFORE, I CAN PERMANENT "STABLE" SETS OF BUILDSRC DEPENDENCIES AND NEVER HAVE A CIRCULAR BUILD FAILURE CRISIS AGAIN.
+
+  DO NOT DIRECTELY DEPEND ON ANY OTHER OF MY OWN MODULES OTHER THAN KBUILD.
+  ANY OTHER DEPENDENCIES OF MY OWN MODULES SHOULD GO INTO KBUILD IN THE "API" CONFIG.
+
+  IF I HAVE ANY ISSUES, REMOVE THE "+" VERSION BELOW AND FIND THE LAST STABLE VERSION
+  */
   implementation("matt.KJ:kbuild:+")
   //  implementation("matt.k:klib:+")
-  implementation("matt.KJ.kjlib:lang:+")
-  implementation("matt.KJ.kjlib:stream:+")
-  implementation("matt.KJ.kjlib:socket:+")
+//  implementation("matt.KJ.kjlib:lang:+")
+//  implementation("matt.KJ.kjlib:stream:+")
+//  implementation("matt.KJ.kjlib:socket:+")
 
 }
 
