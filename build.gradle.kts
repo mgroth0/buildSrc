@@ -49,6 +49,8 @@ dependencies {
 
   println("NEED MUCH BETTER DEPENDENCY RESOLUTION HERE BECAUSE IM GETTING INCOMPATIBLE VERSIONS")
 
+  println("version incrementing is unsafe across projects with git etc.")
+
   println("dissect shadow jar sizes")
 
   implementation("matt.KJ:kbuild:+")
