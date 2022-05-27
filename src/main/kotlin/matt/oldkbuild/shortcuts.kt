@@ -4,11 +4,11 @@
 import java.io.File
 
 import matt.kjlib.stream.recurse.recurse
-import matt.kbuild.proc
-import matt.kbuild.allStdOutAndStdErr
+import matt.kjlib.shell.proc
+import matt.kjlib.shell.allStdOutAndStdErr
 import matt.klib.lang.cap
-import matt.kbuild.git.ExecGit
-import matt.kbuild.git.SimpleGit
+import matt.kbuild.ExecGit
+import matt.kjlib.git.SimpleGit
 import matt.kjlib.socket.SingleSender
 import matt.kjlib.socket.port
 //import matt.kbuild.socket.SingleSender

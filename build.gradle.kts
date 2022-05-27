@@ -59,7 +59,7 @@ dependencies {
   */
 
   /*last worked: 1653680810527*/
-  implementation("matt.KJ:kbuild:1653680810527")
+  implementation("matt.KJ:kbuild:+")
 }
 
 /*
