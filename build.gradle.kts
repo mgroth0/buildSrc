@@ -1,11 +1,7 @@
-
-
-
 repositories {
   mavenCentral()
   mavenLocal()
 }
-
 
 
 val rootProj = rootProject
@@ -18,15 +14,15 @@ plugins {
   /*`embedded-kotlin`*/
 
   //  File(System.getProperty("user.dir") + "/libs.versions.toml")
-//  println(File("../libs.versions.toml").canonicalPath)
+  //  println(File("../libs.versions.toml").canonicalPath)
 
   /*yes, this is stupidly required because user.dir here is .gradle/daemon or something and plugin block dsl and super weird and restricted. look it up if you don't beleive me.*/
   val stupidKtVersion = "1.7.0-RC" // "1.6.21"
 
   kotlin("jvm") version stupidKtVersion
 
-  `kotlin-dsl`
-//  `kotlin-dsl`/* version "2.1.4"*/
+  `kotlin-dsl` version "2.3.3"
+  //  `kotlin-dsl`/* version "2.1.4"*/
 }
 
 
