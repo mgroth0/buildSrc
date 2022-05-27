@@ -134,10 +134,7 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String, jarTaskName: Strin
   //  var thisVersion = lastVersionFile.readText().toInt() + 1
   //  sp.version = thisVersion.toString()
 
-  /*I used to use an incrementing version file. But this quickly becomes an arbitrary number too.
-  * Using system time is much safer. absolutely no risk or overwriting a previous build, which becomes increasingly likely
-  * when a library is being built by sererate projects connected by git. I'm not saying this is the only way to solve that issue (another way could be some global or online version file between projects) but this seems extreemly simple, fast, easy, straightforward, and has the added bonus of including the precise build time right in the versin in case I ever want that data in the future*/
-  sp.version = System.currentTimeMillis()
+
 
   sp.tasks.apply {
 	val ck = this.getAt(compileKotlinJvmTaskName)
