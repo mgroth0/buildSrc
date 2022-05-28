@@ -3,6 +3,7 @@ repositories {
   mavenLocal()
 }
 
+println("check another stupid kt version")
 println("validations would be an excellent test suite")
 println("check git for big files")
 println("root git ignore needs to be synced with root files")

@@ -26,25 +26,17 @@ fun Project.kotlinCompile(
 }
 
 
-/*obviously this can be improved if needed
-I also do this in buildSrc/build.gradle.kts
-without calling this. It can't be helped easily.*/
-fun tomlVersion(name: String) =
-  Toml.parse(FLOW_FOLDER!!.resolve("RootFiles").resolve("libs.versions.toml").toPath()).getTable("versions")!!
-	.getString(name)!!
-
-
 val Project.autoReflectionsJar: String
   get() = "matt.reflections:reflections:0.9.13-SNAPSHOT"
 
 
 fun KotlinJvmOptions.mventionKotlinJvmOptions() {
 
-  jvmTarget = tomlVersion("java")
+  jvmTarget = matt.kbuild.tomlVersion("java")
 
-  languageVersion = tomlVersion("ktlang")
+  languageVersion = matt.kbuild.tomlVersion("ktlang")
 
-  val aboveKt1_5 = DefaultArtifactVersion(tomlVersion("kotlin")) >= DefaultArtifactVersion("1.5.0")
+  val aboveKt1_5 = DefaultArtifactVersion(matt.kbuild.tomlVersion("kotlin")) >= DefaultArtifactVersion("1.5.0")
 
 
 
