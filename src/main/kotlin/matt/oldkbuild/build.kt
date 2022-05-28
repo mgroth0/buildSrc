@@ -81,8 +81,6 @@ fun withTimer(name: String, quiet: Boolean = false, op: ()->Unit) {
 	val diff = stop - start
 	if (!quiet) println("$name took ${diff/1000.0} seconds success=${!failed}")
   }
-
-
 }
 
 fun File.hasParentWithNameStartingWith(s: String): Boolean =
