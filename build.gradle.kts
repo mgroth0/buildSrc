@@ -12,7 +12,7 @@ println("FIX GIT REMOVE SUBMOD")
 println("FIX GIT CONFIG WHILE REMVING SUBMOD")
 println("TRANSFER BUILDSRC TO KBUILD ETC")
 println("give kbuild access to auto submodule and have the non-standard .gitignore requirement open the thing in sublime")
-println("maven stuff should be published with full source")
+println("maven stuff should be published with full source ... though this might not be neccesary because sometimes intelliJ does resolve straight to the src even though thats not what its directly using...")
 println("it would be great if kbuild maven repo was just a full thing like a shadowJar repo? Or is that not neccesarry... not sure about this one")
 println("maybe I actually can just share submodules between projects with maven local! that seems faster and more stable too. would be cool to have both that and git as separte options")
 
