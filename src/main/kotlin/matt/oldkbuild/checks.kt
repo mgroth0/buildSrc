@@ -15,8 +15,11 @@ import java.util.Date
 import matt.kjlib.git.gitSubmodules
 import matt.kjlib.git.ignore.GitIgnore
 import matt.klib.commons.get
+import matt.klib.str.lower
+import matt.klib.str.upper
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
+import org.intellij.lang.annotations.Language
 import javax.inject.Inject
 
 //import matt.klib.listsEqual
@@ -25,17 +28,14 @@ import javax.inject.Inject
 
 open class MValidations @Inject constructor(rootProjectFolder: File): DefaultTask() {
 
-
-  @InputDirectory
-  val someInput = rootProjectFolder
+  @Input
+  val abstracInput = System.currentTimeMillis()
 
   /*THIS IS NECCESARY FOR UP-TO-DATE CHECKS!!!!!*/
-  @OutputFile
-  val outputFile = project.buildDir.resolve("reports").resolve("MValidations.txt")
+  @OutputFile val outputFile = project.buildDir.resolve("reports").resolve("MValidations.txt")
 
 
-  @TaskAction
-  fun validate() {
+  @TaskAction fun validate() {
 
 
 	withTimer("validate", quiet = true) {
@@ -61,23 +61,19 @@ val testSourceSets = listOf(normalSourceSets[1])
 //@OptIn(ExperimentalStdlibApi::class)
 private fun Project.validate(): String {
 
-  this.simpleGit.gitSubmodules
-	.filter { it.name != "buildSrc" }
-	.filter { it.name != "RootFiles" }
-	.forEach {
-	  val expected = ":" + it.path.replace(File.separator, ":").toUpperCase()
-	  ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
-		println("expected=$expected")
-		allprojects.forEach {
-		  println("\t${it.path}")
-		}
-		"${it.name} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
+  this.simpleGit.gitSubmodules.filter { it.name != "buildSrc" }.filter { it.name != "RootFiles" }.forEach {
+	val expected = ":" + it.path.replace(File.separator, ":").toUpperCase()
+	ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
+	  println("expected=$expected")
+	  allprojects.forEach {
+		println("\t${it.path}")
 	  }
+	  "${it.name} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
 	}
+  }
 
 
-  allprojects {
-	/*it.*/dir.resolve("src").listFiles()?.forEach {
+  allprojects {    /*it.*/dir.resolve("src").listFiles()?.forEach {
 	ensure(it.name in normalSourceSets || it.name == ".DS_Store") {
 	  "\"${it.name}\"? No. " + (EXPLANATIONS_FOLD["noWeirdSrcSets.txt"].takeIf { it.exists() }?.readText() ?: "")
 	}
@@ -90,8 +86,7 @@ private fun Project.validate(): String {
 
 		println("PROJ: dollarSign it")
 		bad(
-		  "\n\nNo.\n\n" + (EXPLANATIONS_FOLD["noMavenPublish.txt"].takeIf { it.exists() }?.readText()
-			?.trimIndent()
+		  "\n\nNo.\n\n" + (EXPLANATIONS_FOLD["noMavenPublish.txt"].takeIf { it.exists() }?.readText()?.trimIndent()
 			?: "")
 		)
 	  }
@@ -102,25 +97,57 @@ private fun Project.validate(): String {
   (subprojects.map { it.projectDir } + simpleGit.gitSubmodules.map { rootDir[it.path] }).forEach { projFold ->
 	val gitIgnore = projFold[".gitignore"]
 	val hasBuildFolder = "build" in projFold.list()!!
-	if (projFold == rootDir) {
-	} else {
-	  if (hasBuildFolder) {
-		ensure(gitIgnore.exists()) {
-		  "I think ${this} needs a .gitignore file since it has a build folder"
-		}
 
-		val expectedPatterns = mutableListOf("/build/")
-		if (projFold.name == "buildSrc") {
-		  expectedPatterns += "/gradle/"
-		  expectedPatterns += "/gradlew"
-		  expectedPatterns += "/gradlew.bat"
-		}
-		val patterns = GitIgnore(gitIgnore.readText()).patterns
-		ensure(matt.klib.lang.listsEqual(expectedPatterns, patterns)) {
-		  """non-standard .gitignore for ${projFold}"""
-		}
-
+	if (hasBuildFolder) {
+	  ensure(gitIgnore.exists()) {
+		"I think ${this} needs a .gitignore file since it has a build folder"
 	  }
+	  val patterns = GitIgnore(gitIgnore.readText()).patterns
+	  val expectedPatterns = mutableListOf("/build/")
+	  expectedPatterns += ".gradle/"
+	  expectedPatterns += "/gradle/"
+	  expectedPatterns += "/gradlew"
+	  expectedPatterns += "/gradlew.bat"
+	  expectedPatterns += "/lastversion.txt"
+	  expectedPatterns += ".DS_Store"
+	  expectedPatterns += ".idea/"
+	  expectedPatterns += ".vagrant/"
+	  expectedPatterns += "/temp/"
+	  expectedPatterns += "/tmp/"
+	  expectedPatterns += "/data/"
+	  expectedPatterns += "/cfg/"
+	  expectedPatterns += "/cache/"
+	  expectedPatterns += "/jar/"
+	  expectedPatterns += "/jars/"
+	  expectedPatterns += "/log/"
+	  expectedPatterns += "/logs/"
+	  expectedPatterns += "/bin/jar/"
+	  if (projFold.name.upper() in listOf("KJ", "K").map { it.upper() } || projFold == rootDir) {
+		/*RootFiles*/
+		expectedPatterns += "/build.gradle.kts"
+		expectedPatterns += "/settings.gradle.kts"
+		expectedPatterns += "/gradle.properties"
+		expectedPatterns += "/shadow.gradle"
+	  }
+	  if (projFold.name.upper() == "FLOW".upper()) {
+		expectedPatterns += "/explanations/"
+		expectedPatterns += "/unused_cool/"
+		expectedPatterns += "/icon/"
+		expectedPatterns += "/status/"
+	  }
+
+	  ensure(matt.klib.lang.listsEqual(expectedPatterns, patterns)) {
+		println("automatically write correct gitignore for ${projFold}?")
+		val answer = readLine()
+		var wasFixed = ""
+		if (answer!!.lower() in listOf("yes", "y")) {
+		  gitIgnore.writeText(expectedPatterns.joinToString("\n"))
+		  wasFixed = " (was fixed)"
+		}
+		"""non-standard .gitignore for ${projFold}${wasFixed}"""
+	  }
+
+
 	}
   }
 
@@ -150,8 +177,7 @@ private fun Project.validate(): String {
   allprojects.forEach {
 	val ppi = ProjectPackInfo(it)
 	ppis.add(ppi)
-  }
-  //  allprojects { proj: Project ->
+  } //  allprojects { proj: Project ->
   //
   //  }
   ppis.forEach {
@@ -181,9 +207,7 @@ private fun Project.validate(): String {
   }
   attatchFam(rootPPi)
   val nonRootPPis = ppis.filter { it != rootPPi }
-  ensure(
-	nonRootPPis.all { it.parent != null }
-  ) {
+  ensure(nonRootPPis.all { it.parent != null }) {
 	"""
 	  ${nonRootPPis.first { it.parent == null }} has no parent 
 	""".trimIndent()
@@ -198,8 +222,8 @@ private fun Project.validate(): String {
 		require(rootPPi.dir["KJ"].absolutePath in it.dir.absolutePath) {
 		  """not ready to deal with non-KJs yet"""
 		}
-		"matt." + it.dir.relativeTo(rootPPi.dir["KJ"]).path.removePrefix(File.separator)
-		  .removeSuffix(File.separator).replace(File.separator, ".")
+		"matt." + it.dir.relativeTo(rootPPi.dir["KJ"]).path.removePrefix(File.separator).removeSuffix(File.separator)
+		  .replace(File.separator, ".")
 	  }
 	}
   }
@@ -218,11 +242,9 @@ private fun Project.validate(): String {
 	}
 
 
-	if (!pack.ppi.isJS) {
-	  /*this check was automatic wth j9Jigsaw, but i'm not doing that any more so gotta do it myself*/
+	if (!pack.ppi.isJS) {    /*this check was automatic wth j9Jigsaw, but i'm not doing that any more so gotta do it myself*/
 
-	  pack.sourceFiles.forEach file@{ f ->
-		//	  TODO: File search text and stop reading if found
+	  pack.sourceFiles.forEach file@{ f ->        //	  TODO: File search text and stop reading if found
 		val searchingFor = "package ${pack.name}"
 		val reader = f.reader().buffered()
 		for (line in reader.lines()) {
@@ -311,8 +333,7 @@ private fun Project.validate(): String {
 		if (p1.isMainPack) {
 		  ensure(
 			p1.sourceFiles[0].nameWithoutExtension.equals(
-			  p1.names.last() + "Main",
-			  ignoreCase = true
+			  p1.names.last() + "Main", ignoreCase = true
 			) || p1.sourceFiles[0].nameWithoutExtension.equals(p1.names.last(), ignoreCase = true)
 		  ) /*being a bit lazy. non-executable modules like libraries should NOT have "Main" in any src names. Used an or statement here as a shortcut bc I don't have time to check if the current module is a library now. I'm not sure if I've set this up yet*/{
 
@@ -340,8 +361,7 @@ private fun Project.validate(): String {
 		  }
 		}
 	  }
-	} else {
-	  /*  ensure(p1.sourceFiles.isEmpty()) {
+	} else {    /*  ensure(p1.sourceFiles.isEmpty()) {
 
 		  """
 		  ${p1.name} has both subpackages and a source file
@@ -396,9 +416,7 @@ class ProjectPackInfo(val project: Project) {
   val src = dir["src"]
   val isMultiplatform = dir.hasParentWithNameStartingWith("k")
   val srcExists = src.exists()
-  val srcSets = src.listFiles()
-	?.filter { it.name != ".DS_Store" }
-	?.map { SourceSetPackInfo(it, this) }
+  val srcSets = src.listFiles()?.filter { it.name != ".DS_Store" }?.map { SourceSetPackInfo(it, this) }
   val langs = srcSets?.flatMap { it.langFolds }?.apply {
 	val lfolds = map { it.name }.toSet()
 	if (false) {
@@ -427,8 +445,7 @@ class SourceSetPackInfo(val srcSet: FixedFile, val ppi: ProjectPackInfo) {
   }
 
   init {
-	if (!firstMade) {
-	  //	  println("example SourceSetPackInfo: ${srcSet.absolutePath}")
+	if (!firstMade) {    //	  println("example SourceSetPackInfo: ${srcSet.absolutePath}")
 	  firstMade = true
 	}
 	require(srcSet.isDirectory) {
@@ -472,8 +489,7 @@ class SourceSetLanguagePackInfo(val f: FixedFile, val sspi: SourceSetPackInfo) {
   }
 
   init {
-	if (!firstMade) {
-	  //	  println("example SourceSetLanguagePackInfo: ${f.absolutePath}")
+	if (!firstMade) {    //	  println("example SourceSetLanguagePackInfo: ${f.absolutePath}")
 	  firstMade = true
 	}
 	val packs = mutableListOf<PackageInfo>()
@@ -494,8 +510,8 @@ class SourceSetLanguagePackInfo(val f: FixedFile, val sspi: SourceSetPackInfo) {
 class PackageInfo(val f: FixedFile, val sslpi: SourceSetLanguagePackInfo) {
   val sspi = sslpi.sspi
   val ppi = sspi.ppi
-  val name = f.absolutePath.replace(sslpi.f.absolutePath, "").replace(File.separator, ".").removePrefix(".")
-	.removeSuffix(".")
+  val name =
+	f.absolutePath.replace(sslpi.f.absolutePath, "").replace(File.separator, ".").removePrefix(".").removeSuffix(".")
 
   override fun toString(): String {
 	return "${PackageInfo::class} with f=$f,sslpi=$sslpi"
@@ -506,21 +522,14 @@ class PackageInfo(val f: FixedFile, val sslpi: SourceSetLanguagePackInfo) {
   val isMainPack = name.equals(
 	"matt.${
 	  f.absolutePath.substringAfter(
-		sslpi.f
-		  /*sslpi.sspi.ppi.project.rootProject.projectDir*/
+		sslpi.f        /*sslpi.sspi.ppi.project.rootProject.projectDir*/
 
 		  /*.resolve("KJ")
-		  .resolve(sslpi.sspi.ppi.project.name)*/
-		  /*.resolve("src")
+		  .resolve(sslpi.sspi.ppi.project.name)*/        /*.resolve("src")
 		  .resolve("main")
-		  .resolve(sslpi.name)*/
-		  .resolve("matt") /*redundant*/
-		  .absolutePath
+		  .resolve(sslpi.name)*/.resolve("matt") /*redundant*/.absolutePath
 
-	  )
-		.trimStart(File.separatorChar)
-		.trimEnd(File.separatorChar)
-		.replace(File.separator, ".")
+	  ).trimStart(File.separatorChar).trimEnd(File.separatorChar).replace(File.separator, ".")
 	}", ignoreCase = true
   )/*.apply {
 	println("isMainPack for ${this@PackageInfo.name}=${this}")
