@@ -99,11 +99,11 @@ fun makeAU3(superproject: String, subproject: String, subprojectDir: File) {
 //  isMac && shell("uname", "-m").trim() == "arm64"
 //}
 
-fun err(s: String): Nothing = matt.kjlib.lang.err(s)
+fun err(s: String): Nothing = matt.klib.lang.err(s)
 
 inline fun <T> Iterable<T>.firstOrErr(msg: String, predicate: (T)->Boolean): T {
   for (element in this) if (predicate(element)) return element
-  matt.kjlib.lang.err(msg)
+  err(msg)
 }
 
 val Project.gitFolder get() = projectDir.listFiles()!!.first { it.name == ".git" }
