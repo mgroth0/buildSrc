@@ -108,9 +108,9 @@ private fun Project.validate(): String {
 		  expectedPatterns += "/gradlew.bat"
 		}
 		val patterns = GitIgnore(gitIgnore.readText()).patterns
-//		ensure(matt.klib.listsEqual(expectedPatterns,patterns)) {
-//		  """non-standard .gitignore for ${projFold}"""
-//		}
+		ensure(matt.klib.lang.listsEqual(expectedPatterns,patterns)) {
+		  """non-standard .gitignore for ${projFold}"""
+		}
 
 	  }
 	}
