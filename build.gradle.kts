@@ -63,8 +63,8 @@ dependencies {
   IF I HAVE ANY ISSUES, REMOVE THE "+" VERSION BELOW AND FIND THE LAST STABLE VERSION
   */
 
-  /*last worked: 1653711543137*/
-  implementation("matt.KJ:kbuild:1653713570208")
+  /*last worked: 1653713570208*/
+  implementation("matt.KJ:kbuild:+")
 }
 
 /*

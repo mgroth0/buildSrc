@@ -3,7 +3,8 @@
 
 import java.io.File
 
-import matt.kjlib.stream.recurse.recurse
+//import matt.klib.stream.recurse.recurse
+//import matt.stream.recurse.recurse
 import matt.kjlib.shell.proc
 import matt.kjlib.shell.allStdOutAndStdErr
 import matt.klib.lang.cap
@@ -11,6 +12,7 @@ import matt.kbuild.ExecGit
 import matt.kjlib.git.SimpleGit
 import matt.kjlib.socket.SingleSender
 import matt.kjlib.socket.port
+import matt.stream.recurse.recurse
 //import matt.kbuild.socket.SingleSender
 //import matt.kbuild.socket.port
 import org.gradle.api.Action
