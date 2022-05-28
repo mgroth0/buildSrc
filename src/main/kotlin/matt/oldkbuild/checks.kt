@@ -12,6 +12,7 @@ import java.time.Instant
 import java.time.Year
 import java.util.Calendar
 import java.util.Date
+import matt.kjlib.git.gitSubmodules
 
 /*all task classes have to be open I think*/
 open class MValidations: DefaultTask() {
@@ -49,7 +50,7 @@ val testSourceSets = listOf(normalSourceSets[1])
 //@OptIn(ExperimentalStdlibApi::class)
 private fun Project.validate(): String {
 
-/*  gitSubmodules
+  /*this.simpleGit.gitSubmodules
 	.filter { it.name != "buildSrc" }
 	.filter { it.name != "RootFiles" }
 	.forEach {
