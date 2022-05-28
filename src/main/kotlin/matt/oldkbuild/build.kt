@@ -60,29 +60,6 @@ fun KotlinJvmOptions.mventionKotlinJvmOptions() {
   } else listOf())
 }
 
-fun Exec.setExitHandler(op: (Int, String)->Unit) {
-  isIgnoreExitValue = true
-  val out = java.io.ByteArrayOutputStream()
-  val err = java.io.ByteArrayOutputStream()
-  this.standardOutput = out
-  this.errorOutput = err
-
-  doLast {
-	val result = executionResult.get()
-	op(result.exitValue, standardOutput.toString() + errorOutput.toString())
-  }
-
-  doLast {
-	val stdout = standardOutput.toString()
-
-	if (executionResult.get().exitValue == 0) {
-	  //do nothing
-	} else if ("nothing to commit" !in stdout) {
-	  throw RuntimeException(stdout)
-	}
-  }
-}
-
 fun org.gradle.kotlin.dsl.DependencyHandlerScope.implementations(vararg deps: Any) {
   deps.forEach {
 	add("implementation", it)
