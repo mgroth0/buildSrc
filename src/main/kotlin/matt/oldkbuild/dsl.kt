@@ -26,9 +26,11 @@ fun Project.kotlinCompile(
 //  get() = "matt.reflections:reflections:0.9.13-SNAPSHOT"
 
 
-fun KotlinJvmOptions.mventionKotlinJvmOptions() {
+fun KotlinJvmOptions.mventionKotlinJvmOptions(kbuild: Boolean = false) {
 
-  jvmTarget = matt.kbuild.tomlVersion("java")
+
+
+  jvmTarget = if (kbuild) "1.8" else matt.kbuild.tomlVersion("java")
 
   languageVersion = matt.kbuild.tomlVersion("ktlang")
 
