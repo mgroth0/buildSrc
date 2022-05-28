@@ -94,61 +94,67 @@ private fun Project.validate(): String {
 
 
   }
-  (subprojects.map { it.projectDir } + simpleGit.gitSubmodules.map { rootDir[it.path] }).forEach { projFold ->
+  (allprojects.map { it.projectDir } + simpleGit.gitSubmodules.map { rootDir[it.path] }).forEach { projFold ->
 	val gitIgnore = projFold[".gitignore"]
-	val hasBuildFolder = "build" in projFold.list()!!
+	//	val hasBuildFolder = "build" in projFold.list()!!
 
-	if (hasBuildFolder) {
-	  ensure(gitIgnore.exists()) {
-		"I think ${this} needs a .gitignore file since it has a build folder"
-	  }
-	  val patterns = GitIgnore(gitIgnore.readText()).patterns
-	  val expectedPatterns = mutableListOf("/build/")
-	  expectedPatterns += ".gradle/"
-	  expectedPatterns += "/gradle/"
-	  expectedPatterns += "/gradlew"
-	  expectedPatterns += "/gradlew.bat"
-	  expectedPatterns += "/lastversion.txt"
-	  expectedPatterns += ".DS_Store"
-	  expectedPatterns += ".idea/"
-	  expectedPatterns += ".vagrant/"
-	  expectedPatterns += "/temp/"
-	  expectedPatterns += "/tmp/"
-	  expectedPatterns += "/data/"
-	  expectedPatterns += "/cfg/"
-	  expectedPatterns += "/cache/"
-	  expectedPatterns += "/jar/"
-	  expectedPatterns += "/jars/"
-	  expectedPatterns += "/log/"
-	  expectedPatterns += "/logs/"
-	  expectedPatterns += "/bin/jar/"
-	  if (projFold.name.upper() in listOf("KJ", "K").map { it.upper() } || projFold == rootDir) {
-		/*RootFiles*/
-		expectedPatterns += "/build.gradle.kts"
-		expectedPatterns += "/settings.gradle.kts"
-		expectedPatterns += "/gradle.properties"
-		expectedPatterns += "/shadow.gradle"
-	  }
-	  if (projFold.name.upper() == "FLOW".upper()) {
-		expectedPatterns += "/explanations/"
-		expectedPatterns += "/unused_cool/"
-		expectedPatterns += "/icon/"
-		expectedPatterns += "/status/"
-	  }
-
-	  ensure(matt.klib.lang.listsEqual(expectedPatterns, patterns)) {
-		println("automatically write correct gitignore for ${projFold}?")
-		val answer = readLine()
-		var wasFixed = ""
-		if (answer!!.lower() in listOf("yes", "y")) {
-		  gitIgnore.writeText(expectedPatterns.joinToString("\n"))
-		  wasFixed = " (was fixed)"
-		}
-		"""non-standard .gitignore for ${projFold}${wasFixed}"""
-	  }
-
-
+	if (!gitIgnore.exists()) {
+	  gitIgnore.writeText("")
 	}
+	//	if (hasBuildFolder) {
+	//	ensure(gitIgnore.exists()) {
+	//	  "I think ${projFold} needs a .gitignore file since it is either a gradle subproject or a git submodule"
+	//	}
+	val patterns = GitIgnore(gitIgnore.readText()).patterns
+	val expectedPatterns = mutableListOf("/build/")
+	expectedPatterns += ".gradle/"
+	expectedPatterns += "/gradle/"
+	expectedPatterns += "/gradlew"
+	expectedPatterns += "/gradlew.bat"
+	expectedPatterns += "/lastversion.txt"
+	expectedPatterns += ".DS_Store"
+	expectedPatterns += ".idea/"
+	expectedPatterns += ".vagrant/"
+	expectedPatterns += "/temp/"
+	expectedPatterns += "/tmp/"
+	expectedPatterns += "/data/"
+	expectedPatterns += "/cfg/"
+	expectedPatterns += "/cache/"
+	expectedPatterns += "/jar/"
+	expectedPatterns += "/jars/"
+	expectedPatterns += "/log/"
+	expectedPatterns += "/logs/"
+	expectedPatterns += "/bin/jar/"
+	if (projFold.name.upper() in listOf("KJ", "K").map { it.upper() } || projFold == rootDir) {
+	  /*RootFiles*/
+	  expectedPatterns += "/build.gradle.kts"
+	  expectedPatterns += "/settings.gradle.kts"
+	  expectedPatterns += "/gradle.properties"
+	  expectedPatterns += "/shadow.gradle"
+	}
+	if (projFold.name.upper() == "FLOW".upper()) {
+	  expectedPatterns += "/explanations/"
+	  expectedPatterns += "/unused_cool/"
+	  expectedPatterns += "/icon/"
+	  expectedPatterns += "/status/"
+	}
+	if (projFold.name.upper() == "ROOTFILES".upper()) {
+	  expectedPatterns -= "/gradle.properties" /*shouldn't be there, just double checking*/
+	}
+
+	ensure(matt.klib.lang.listsEqual(expectedPatterns, patterns)) {
+	  println("automatically write correct gitignore for ${projFold}?")
+	  val answer = readLine()
+	  var wasFixed = ""
+	  if (answer!!.lower() in listOf("yes", "y")) {
+		gitIgnore.writeText(expectedPatterns.joinToString("\n"))
+		wasFixed = " (was fixed)"
+	  }
+	  """non-standard .gitignore for ${projFold}${wasFixed}"""
+	}
+
+
+	//	}
   }
 
   var buildSrcBS = Rdir.resolve("buildSrc").resolve("build.gradle.kts")
