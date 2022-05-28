@@ -15,11 +15,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 * This file is specifically for things that can't go into kbuild because aparently kbuild can not have the kotlin gradle dsl as a dependency?
 * */
 
-fun Project.kotlinCompile(
-  cfg: Action<KotlinCompile>
-) {
-  tasks.withType(KotlinCompile::class.java, cfg)
-}
+//fun Project.kotlinCompile(
+//  cfg: Action<KotlinCompile>
+//) {
+//  tasks.withType(KotlinCompile::class.java, cfg)
+//}
 
 
 //val Project.autoReflectionsJar: String
