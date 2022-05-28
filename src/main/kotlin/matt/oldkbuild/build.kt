@@ -85,20 +85,6 @@ fun withTimer(name: String, quiet: Boolean = false, op: ()->Unit) {
 
 }
 
-
-val gitSubmodules
-  get() = File(".gitmodules")
-	.readText()
-	.lines()
-	.filter { it.startsWith("[") }
-	.map { it.substringAfter("\"").substringBefore("\"") }
-	.map { it.replace("/", "_") }
-	.map {
-	  it to File(".gitmodules")
-		.readText().substringAfter("\"${it}\"").substringAfter("path =").substringBefore("\n").trim()
-	}
-
-
 fun File.hasParentWithNameStartingWith(s: String): Boolean =
   nameWithoutExtension.startsWith(s) || parentFile?.hasParentWithNameStartingWith(s) ?: false
 

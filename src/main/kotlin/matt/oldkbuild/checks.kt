@@ -49,19 +49,19 @@ val testSourceSets = listOf(normalSourceSets[1])
 //@OptIn(ExperimentalStdlibApi::class)
 private fun Project.validate(): String {
 
-  gitSubmodules
-	.filter { it.first != "buildSrc" }
-	.filter { it.first != "RootFiles" }
+/*  gitSubmodules
+	.filter { it.name != "buildSrc" }
+	.filter { it.name != "RootFiles" }
 	.forEach {
-	  val expected = ":" + it.first.replace("_", ":").toUpperCase()
+	  val expected = ":" + it.path.replace(File.separator, ":").toUpperCase()
 	  ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
 		println("expected=$expected")
 		allprojects.forEach {
 		  println("\t${it.path}")
 		}
-		"${it.first} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
+		"${it.name} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
 	  }
-	}
+	}*/
 
 
   allprojects {
@@ -87,9 +87,7 @@ private fun Project.validate(): String {
 
 	val hasGitIgnore = ".gitignore" in projectDir.list()!!
 	val hasBuildFolder = "build" in projectDir.list()!!
-
 	if (this == rootProject) {
-
 	} else {
 	  if (hasBuildFolder) {
 		ensure(hasGitIgnore) {
@@ -97,13 +95,21 @@ private fun Project.validate(): String {
 		}
 	  }
 	}
+  }
 
-//	if (this != rootProject) {
-//	  ensure(!hasGitIgnore) {
-//		"lets try only having a single .gitignore in the root project. delete the one in ${projectDir}?"
-//	  }
-//	}
+  /*subprojects.map { it.projectDir } + gitSubmodules*/
 
+  rootProject.projectDir.resolve("buildSrc").apply {
+	val hasGitIgnore = ".gitignore" in projectDir.list()!!
+	val hasBuildFolder = "build" in projectDir.list()!!
+	if (this == rootProject) {
+	} else {
+	  if (hasBuildFolder) {
+		ensure(hasGitIgnore) {
+		  "I think ${this} needs a .gitignore file since it has a build folder"
+		}
+	  }
+	}
   }
 
   var buildSrcBS = Rdir.resolve("buildSrc").resolve("build.gradle.kts")

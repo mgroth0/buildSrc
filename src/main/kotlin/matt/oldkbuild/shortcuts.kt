@@ -5,8 +5,6 @@ import java.io.File
 
 //import matt.klib.stream.recurse.recurse
 //import matt.stream.recurse.recurse
-import matt.kjlib.shell.proc
-import matt.kjlib.shell.allStdOutAndStdErr
 import matt.klib.lang.cap
 import matt.kbuild.ExecGit
 import matt.kjlib.git.SimpleGit
@@ -108,14 +106,14 @@ inline fun <T> Iterable<T>.firstOrErr(msg: String, predicate: (T)->Boolean): T {
   err(msg)
 }
 
-val Project.gitFolder get() = projectDir.listFiles()!!.first { it.name == ".git" }
+val Project.dotGitFolder get() = projectDir.listFiles()!!.first { it.name == ".git" }
 val Project.isGitProject get() = ".git" in projectDir.list()!!
 
 
 private val simpleGits = mutableMapOf<Project, SimpleGit>()
 val Project.simpleGit: SimpleGit
   get() {
-	return simpleGits[this] ?: SimpleGit(gitDir = this.gitFolder.absolutePath).also { simpleGits[this] = it }
+	return simpleGits[this] ?: SimpleGit(gitDir = this.dotGitFolder.absolutePath).also { simpleGits[this] = it }
   }
 
 fun DependencyHandler.jvm(project: ProjectDependency) = project(
@@ -126,7 +124,7 @@ fun DependencyHandler.jvm(project: ProjectDependency) = project(
 )
 
 
-fun Project.execGitFor(task: Exec) = ExecGit(task = task, dir = this.gitFolder.absolutePath)
+fun Project.execGitFor(task: Exec) = ExecGit(task = task, dir = this.dotGitFolder.absolutePath)
 fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.list()!! }!!.let { f ->
   ExecGit(
 	task = task, dir = f.resolve(".git").absolutePath
