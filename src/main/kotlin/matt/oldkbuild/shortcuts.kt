@@ -124,10 +124,10 @@ fun DependencyHandler.jvm(project: ProjectDependency) = project(
 )
 
 
-fun Project.execGitFor(task: Exec) = ExecGit(task = task, dir = this.dotGitFolder.absolutePath)
+fun Project.execGitFor(task: Exec) = ExecGit(task = task, dotGitDir = this.dotGitFolder.absolutePath)
 fun File.execGitFor(task: Exec) = takeIf { this.isDirectory && ".git" in this.list()!! }!!.let { f ->
   ExecGit(
-	task = task, dir = f.resolve(".git").absolutePath
+	task = task, dotGitDir = f.resolve(".git").absolutePath
   )
 }
 
