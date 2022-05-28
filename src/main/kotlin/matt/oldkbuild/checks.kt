@@ -54,13 +54,14 @@ private fun Project.validate(): String {
 	.filter { it.first != "RootFiles" }
 	.forEach {
 	  val expected = ":" + it.first.replace("_", ":").toUpperCase()
-	  ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
+	  warn("UNCOMMENT THIS")
+	  /*ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
 		println("expected=$expected")
 		allprojects.forEach {
 		  println("\t${it.path}")
 		}
 		"${it.first} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
-	  }
+	  }*/
 	}
 
 
@@ -464,6 +465,7 @@ class PackageInfo(val f: FixedFile, val sslpi: SourceSetLanguagePackInfo) {
   override fun toString(): String {
 	return "${PackageInfo::class} with f=$f,sslpi=$sslpi"
   }
+
   val names = name.split(".")
   val isTest = sspi.isTest
   val isMainPack = name.equals(
