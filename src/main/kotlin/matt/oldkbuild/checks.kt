@@ -15,6 +15,7 @@ import java.util.Date
 import matt.kjlib.git.gitSubmodules
 import matt.kjlib.git.ignore.GitIgnore
 import matt.klib.commons.get
+//import matt.klib.listsEqual
 
 /*all task classes have to be open I think*/
 open class MValidations: DefaultTask() {
@@ -90,7 +91,6 @@ private fun Project.validate(): String {
 
 
   }
-/*
   (subprojects.map { it.projectDir } + simpleGit.gitSubmodules.map { rootDir[it.path] }).forEach { projFold ->
 	val gitIgnore = projFold[".gitignore"]
 	val hasBuildFolder = "build" in projFold.list()!!
@@ -108,14 +108,13 @@ private fun Project.validate(): String {
 		  expectedPatterns += "/gradlew.bat"
 		}
 		val patterns = GitIgnore(gitIgnore.readText()).patterns
-		ensure(listE)
+//		ensure(matt.klib.listsEqual(expectedPatterns,patterns)) {
+//		  """non-standard .gitignore for ${projFold}"""
+//		}
 
-		ensure(patterns.size == 1 && patterns.first() == "/build/") {
-		  """non-standard .gitignore for ${projFold}"""
-		}
 	  }
 	}
-  }*/
+  }
 
   var buildSrcBS = Rdir.resolve("buildSrc").resolve("build.gradle.kts")
   if (!buildSrcBS.exists()) {
