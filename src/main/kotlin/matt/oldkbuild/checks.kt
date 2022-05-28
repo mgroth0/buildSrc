@@ -15,11 +15,19 @@ import java.util.Date
 import matt.kjlib.git.gitSubmodules
 import matt.kjlib.git.ignore.GitIgnore
 import matt.klib.commons.get
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import javax.inject.Inject
+
 //import matt.klib.listsEqual
 
 /*all task classes have to be open I think*/
-open class MValidations: DefaultTask() {
 
+open class MValidations @Inject constructor(rootProjectFolder: File): DefaultTask() {
+
+
+  @InputDirectory
+  val someInput = rootProjectFolder
 
   /*THIS IS NECCESARY FOR UP-TO-DATE CHECKS!!!!!*/
   @OutputFile
@@ -108,7 +116,7 @@ private fun Project.validate(): String {
 		  expectedPatterns += "/gradlew.bat"
 		}
 		val patterns = GitIgnore(gitIgnore.readText()).patterns
-		ensure(matt.klib.lang.listsEqual(expectedPatterns,patterns)) {
+		ensure(matt.klib.lang.listsEqual(expectedPatterns, patterns)) {
 		  """non-standard .gitignore for ${projFold}"""
 		}
 
