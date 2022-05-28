@@ -8,6 +8,7 @@ println("ESSENTIAL 3: MAKE LASTVERSION.TXT MORE AUTOMATED")
 println("FIX GIT REMOVE SUBMOD")
 println("FIX GIT CONFIG WHILE REMVING SUBMOD")
 println("TRANSFER BUILDSRC TO KBUILD ETC")
+println("give kbuild access to auto submodule and have the non-standard .gitignore requirement open the thing in sublime")
 
 plugins {
   id("groovy")

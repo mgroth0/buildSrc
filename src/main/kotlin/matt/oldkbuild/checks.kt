@@ -13,6 +13,7 @@ import java.time.Year
 import java.util.Calendar
 import java.util.Date
 import matt.kjlib.git.gitSubmodules
+import matt.kjlib.git.ignore.GitIgnore
 import matt.klib.commons.get
 
 /*all task classes have to be open I think*/
@@ -89,19 +90,32 @@ private fun Project.validate(): String {
 
 
   }
-
-  (subprojects.map { it.projectDir } + simpleGit.gitSubmodules.map { rootDir[it.path] }).forEach {
-	val hasGitIgnore = ".gitignore" in it.list()!!
-	val hasBuildFolder = "build" in it.list()!!
-	if (it == rootDir) {
+/*
+  (subprojects.map { it.projectDir } + simpleGit.gitSubmodules.map { rootDir[it.path] }).forEach { projFold ->
+	val gitIgnore = projFold[".gitignore"]
+	val hasBuildFolder = "build" in projFold.list()!!
+	if (projFold == rootDir) {
 	} else {
 	  if (hasBuildFolder) {
-		ensure(hasGitIgnore) {
+		ensure(gitIgnore.exists()) {
 		  "I think ${this} needs a .gitignore file since it has a build folder"
+		}
+
+		val expectedPatterns = mutableListOf("/build/")
+		if (projFold.name == "buildSrc") {
+		  expectedPatterns += "/gradle/"
+		  expectedPatterns += "/gradlew"
+		  expectedPatterns += "/gradlew.bat"
+		}
+		val patterns = GitIgnore(gitIgnore.readText()).patterns
+		ensure(listE)
+
+		ensure(patterns.size == 1 && patterns.first() == "/build/") {
+		  """non-standard .gitignore for ${projFold}"""
 		}
 	  }
 	}
-  }
+  }*/
 
   var buildSrcBS = Rdir.resolve("buildSrc").resolve("build.gradle.kts")
   if (!buildSrcBS.exists()) {
