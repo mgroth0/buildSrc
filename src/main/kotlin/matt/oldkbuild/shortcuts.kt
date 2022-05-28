@@ -184,3 +184,5 @@ fun Project.setupMavenTasks(compileKotlinJvmTaskName: String, jarTaskName: Strin
   }
 }
 
+
+fun tomlVersion(name: String) = matt.kbuild.tomlVersion(name)
