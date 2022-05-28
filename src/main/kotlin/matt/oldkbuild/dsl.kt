@@ -11,8 +11,9 @@ import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-/*SHOULD NEVER USE THIS. DOESNT WORK WITH TOOLING API*/
-/*val USER_DIR = File(System.getProperty("user.dir"))*/
+/*
+* This file is specifically for things that can't go into kbuild because aparently kbuild can not have the kotlin gradle dsl as a dependency?
+* */
 
 fun Project.kotlinCompile(
   cfg: Action<KotlinCompile>
