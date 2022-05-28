@@ -3,7 +3,6 @@ repositories {
   mavenLocal()
 }
 
-println("slow validations")
 println("intelliJ file system is slowing down. which dirs to exclude in gradle?")
 println("validations would be an excellent test suite")
 println("check git for big files")
