@@ -85,6 +85,24 @@ private fun Project.validate(): String {
 	  }
 	}
 
+	val hasGitIgnore = ".gitignore" in projectDir.list()!!
+	val hasBuildFolder = "build" in projectDir.list()!!
+
+	if (this == rootProject) {
+
+	} else {
+	  if (hasBuildFolder) {
+		ensure(hasGitIgnore) {
+		  "I think ${this} needs a .gitignore file since it has a build folder"
+		}
+	  }
+	}
+
+//	if (this != rootProject) {
+//	  ensure(!hasGitIgnore) {
+//		"lets try only having a single .gitignore in the root project. delete the one in ${projectDir}?"
+//	  }
+//	}
 
   }
 
