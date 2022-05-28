@@ -1,9 +1,9 @@
-repositories {
-  mavenLocal()
-  mavenCentral()
-}
-
-dependencies {
-  /*last worked: 1653713570208*/
-  implementation("matt.KJ:kbuild:+")
-}
+//repositories {
+//  mavenLocal()
+//  mavenCentral()
+//}
+//
+//dependencies {
+//  /*last worked: 1653713570208*/
+//  implementation("matt.KJ:kbuild:+")
+//}
