@@ -26,8 +26,8 @@ fun Project.kotlinCompile(
 }
 
 
-val Project.autoReflectionsJar: String
-  get() = "matt.reflections:reflections:0.9.13-SNAPSHOT"
+//val Project.autoReflectionsJar: String
+//  get() = "matt.reflections:reflections:0.9.13-SNAPSHOT"
 
 
 fun KotlinJvmOptions.mventionKotlinJvmOptions() {
