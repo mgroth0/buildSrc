@@ -54,14 +54,13 @@ private fun Project.validate(): String {
 	.filter { it.first != "RootFiles" }
 	.forEach {
 	  val expected = ":" + it.first.replace("_", ":").toUpperCase()
-	  warn("UNCOMMENT THIS")
-	  /*ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
+	  ensure(expected in this.allprojects.map { it.path.toUpperCase() }) {
 		println("expected=$expected")
 		allprojects.forEach {
 		  println("\t${it.path}")
 		}
 		"${it.first} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
-	  }*/
+	  }
 	}
 
 
