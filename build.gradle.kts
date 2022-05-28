@@ -15,7 +15,10 @@ println("give kbuild access to auto submodule and have the non-standard .gitigno
 println("maven stuff should be published with full source ... though this might not be neccesary because sometimes intelliJ does resolve straight to the src even though thats not what its directly using...")
 println("it would be great if kbuild maven repo was just a full thing like a shadowJar repo? Or is that not neccesarry... not sure about this one")
 println("maybe I actually can just share submodules between projects with maven local! that seems faster and more stable too. would be cool to have both that and git as separte options")
-println("buildSrc is for sloppy peasants. It slows down every single build, adds multiple completely unnesecary additional layers of complexity to the build process, makes syncing code accross projects more complicated, etc etc... and its not even neccesary! I can build all the gradle plugins I need now in standalone projects that perfectly share logic with the rest of my code. starting with kbuild")
+println("buildSrc is for sloppy peasants. It slows down every single build, adds multiple completely unnesecary additional layers of complexity to the build process, makes syncing code accross projects more complicated, etc etc... and its not even neccesary! I can build all the gradle plugins I need now in standalone projects that perfectly share logic with the rest of my code. starting with kbuild. ... one might argue that buildSrc is a way to be able to configre how i build my project before i buuild them and that this would lock me into certain uild configuratinos. Well:" +
+	"1. so what? old build cfgs should normally be able to build new build cfgs, and I have access to all old build cfgs through maven" +
+	"2. this is good motivation to make my gradle plugins extensible" +
+	"3. if I really need to as a last resort, all I have to do is copy and paste some of the code from kbuild into a temporary buildSrc and edit as needed temporarily. but this should never happen anyway.")
 
 plugins {
   id("groovy")
