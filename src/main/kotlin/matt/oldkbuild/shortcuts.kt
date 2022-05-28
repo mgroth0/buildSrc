@@ -3,7 +3,7 @@
 
 import java.io.File
 
-import matt.kjlib.stream.recurse.recurse
+import matt.stream.recurse.recurse
 import matt.kjlib.shell.proc
 import matt.kjlib.shell.allStdOutAndStdErr
 import matt.klib.lang.cap
