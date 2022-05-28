@@ -5,6 +5,7 @@ repositories {
 
 println("ESSENTIAL 1: KJCL SHOULDNT BE DEPENDENT ON GRADLE RUN")
 println("ESSENTIAL 2: GITIGNORES SHOULD BE STANDARDIZE, EVEN WITH ALL SUBMODULES")
+println("ESSENTIAL 3: MAKE LASTVERSION.TXT MORE AUTOMATED")
 
 plugins {
   id("groovy")
@@ -18,7 +19,6 @@ plugins {
   kotlin("jvm") version stupidKtVersion
 
   `kotlin-dsl`
-
 
 
 }
