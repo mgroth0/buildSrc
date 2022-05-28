@@ -50,7 +50,7 @@ val testSourceSets = listOf(normalSourceSets[1])
 //@OptIn(ExperimentalStdlibApi::class)
 private fun Project.validate(): String {
 
-  /*this.simpleGit.gitSubmodules
+  this.simpleGit.gitSubmodules
 	.filter { it.name != "buildSrc" }
 	.filter { it.name != "RootFiles" }
 	.forEach {
@@ -62,7 +62,7 @@ private fun Project.validate(): String {
 		}
 		"${it.name} should be a gradle subproject. All git submodules should be gradle projects so I can properly automate their git-related tasks"
 	  }
-	}*/
+	}
 
 
   allprojects {
