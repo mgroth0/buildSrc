@@ -68,25 +68,6 @@ fun KotlinJvmOptions.mventionKotlinJvmOptions() {
   } else listOf())
 }
 
-fun withTimer(name: String, quiet: Boolean = false, op: ()->Unit) {
-  var failed = false
-  val start = System.currentTimeMillis()
-  try {
-	op()
-  } catch (e: RuntimeException) {
-	failed = true
-	throw e
-  } finally {
-	val stop = System.currentTimeMillis()
-	val diff = stop - start
-	if (!quiet) println("$name took ${diff/1000.0} seconds success=${!failed}")
-  }
-}
-
-fun File.hasParentWithNameStartingWith(s: String): Boolean =
-  nameWithoutExtension.startsWith(s) || parentFile?.hasParentWithNameStartingWith(s) ?: false
-
-
 fun Exec.setExitHandler(op: (Int, String)->Unit) {
   isIgnoreExitValue = true
   val out = java.io.ByteArrayOutputStream()
