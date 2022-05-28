@@ -16,6 +16,9 @@ plugins {
   kotlin("jvm") version stupidKtVersion
 
   `kotlin-dsl`
+
+
+
 }
 
 
@@ -58,8 +61,8 @@ dependencies {
   IF I HAVE ANY ISSUES, REMOVE THE "+" VERSION BELOW AND FIND THE LAST STABLE VERSION
   */
 
-  /*last worked: 1653685607626*/
-  implementation("matt.KJ:kbuild:+")
+  /*last worked: 1653711543137*/
+  implementation("matt.KJ:kbuild:1653711543137")
 }
 
 /*
