@@ -15,6 +15,7 @@ println("give kbuild access to auto submodule and have the non-standard .gitigno
 println("maven stuff should be published with full source ... though this might not be neccesary because sometimes intelliJ does resolve straight to the src even though thats not what its directly using...")
 println("it would be great if kbuild maven repo was just a full thing like a shadowJar repo? Or is that not neccesarry... not sure about this one")
 println("maybe I actually can just share submodules between projects with maven local! that seems faster and more stable too. would be cool to have both that and git as separte options")
+println("buildSrc is for sloppy peasants. It slows down every single build, adds multiple completely unnesecary additional layers of complexity to the build process, makes syncing code accross projects more complicated, etc etc... and its not even neccesary! I can build all the gradle plugins I need now in standalone projects that perfectly share logic with the rest of my code. starting with kbuild")
 
 plugins {
   id("groovy")
