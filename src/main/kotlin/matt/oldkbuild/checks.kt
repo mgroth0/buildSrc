@@ -28,8 +28,8 @@ import javax.inject.Inject
 
 open class MValidations @Inject constructor(rootProjectFolder: File): DefaultTask() {
 
-
-  @InputDirectory val someInput = rootProjectFolder
+  @Input
+  val abstracInput = System.currentTimeMillis()
 
   /*THIS IS NECCESARY FOR UP-TO-DATE CHECKS!!!!!*/
   @OutputFile val outputFile = project.buildDir.resolve("reports").resolve("MValidations.txt")

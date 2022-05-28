@@ -5,6 +5,7 @@ repositories {
 
 println("ESSENTIAL 2: GITIGNORES SHOULD BE STANDARDIZE, EVEN WITH ALL SUBMODULES")
 println("slow validations")
+println("validations would be an excellent test suite")
 println("check git for big files")
 println("root git ignore needs to be synced with root files")
 println("ESSENTIAL 3: MAKE LASTVERSION.TXT MORE AUTOMATED")
