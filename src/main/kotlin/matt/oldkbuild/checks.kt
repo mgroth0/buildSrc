@@ -13,6 +13,7 @@ import java.time.Year
 import java.util.Calendar
 import java.util.Date
 import matt.kjlib.git.gitSubmodules
+import matt.klib.commons.get
 
 /*all task classes have to be open I think*/
 open class MValidations: DefaultTask() {
@@ -86,24 +87,13 @@ private fun Project.validate(): String {
 	  }
 	}
 
-	val hasGitIgnore = ".gitignore" in projectDir.list()!!
-	val hasBuildFolder = "build" in projectDir.list()!!
-	if (this == rootProject) {
-	} else {
-	  if (hasBuildFolder) {
-		ensure(hasGitIgnore) {
-		  "I think ${this} needs a .gitignore file since it has a build folder"
-		}
-	  }
-	}
+
   }
 
-  /*subprojects.map { it.projectDir } + gitSubmodules*/
-
-  rootProject.projectDir.resolve("buildSrc").apply {
-	val hasGitIgnore = ".gitignore" in projectDir.list()!!
-	val hasBuildFolder = "build" in projectDir.list()!!
-	if (this == rootProject) {
+  (subprojects.map { it.projectDir } + simpleGit.gitSubmodules.map { rootDir[it.path] }).forEach {
+	val hasGitIgnore = ".gitignore" in it.list()!!
+	val hasBuildFolder = "build" in it.list()!!
+	if (it == rootDir) {
 	} else {
 	  if (hasBuildFolder) {
 		ensure(hasGitIgnore) {
